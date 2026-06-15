@@ -1,0 +1,608 @@
+# TFI Music - Retro Cassette Player Task List
+
+- [ ] Project Initialization
+    - [x] Create Next.js app (`tfi-music`) <!-- id: 0 -->
+    - [x] Install dependencies (`framer-motion`, `lucide-react`, `clsx`, `tailwind-merge`) <!-- id: 1 -->
+    - [x] Configure Tailwind for Retro theme (Fonts, Colors) <!-- id: 2 -->
+- [ ] Core UI Components (SVG)
+    - [x] Create `Cassette` SVG component <!-- id: 3 -->
+    - [x] Create `Walkman` SVG component <!-- id: 4 -->
+    - [x] Create `TapeDeck` container <!-- id: 5 -->
+- [ ] Feature: Mixtape Creation
+    - [x] Implement Title Input <!-- id: 6 -->
+    - [x] Implement "Create Mix" logic (spawning cassettes) <!-- id: 7 -->
+- [ ] Feature: Interactive Player
+    - [x] Implement Drag and Drop (Framer Motion) <!-- id: 8 -->
+    - [x] Implement Play/Pause state <!-- id: 9 -->
+    - [x] Add animations (spinning reels) <!-- id: 10 -->
+- [ ] Spotify Integration (Basic)
+    - [x] Setup NextAuth with Spotify <!-- id: 11 -->
+    - [x] Implement Song Search <!-- id: 12 -->
+    - [x] Connect Player to Spotify Web Playback SDK <!-- id: 13 -->
+- [x] Performance Optimization
+    - [x] Optimize Cassette SVG rendering (remove filters)
+    - [x] Memoize components to prevent drag lag
+- [x] Feature: Realism & Audio
+    - [x] Implement Web Audio API hook for procedural sounds (Click, Insert, Whir) <!-- id: 14 -->
+    - [x] Add sound triggers to interactions (Drag, Drop, Play) <!-- id: 15 -->
+    - [x] Enhance Cassette SVG with gradients and texture <!-- id: 16 -->
+    - [x] Add "Grain" texture overlay to the stage <!-- id: 17 -->
+- [x] Refinement: "TFI TAPES" & Premium Feel
+    - [x] Rebrand to "TFI TAPES" with "Designed by TFIverse.com" footer <!-- id: 18 -->
+    - [x] Make Player draggable <!-- id: 19 -->
+    - [x] Tune drag physics (stiffness, damping) for smoothness <!-- id: 20 -->
+    - [x] Overhaul Audio: Implement complex synthesis for "Real" sounds <!-- id: 21 -->
+    - [x] Tune Cassette physics to match Player (reduce elasticity, subtle animations) <!-- id: 22 -->
+- [x] Optimization: Remove Lag
+    - [x] Remove `feTurbulence` noise filters from Cassette and Stage <!-- id: 23 -->
+    - [x] Replace dynamic noise with static CSS/Image texture if needed <!-- id: 24 -->
+    - [x] Optimize `box-shadow` transitions <!-- id: 25 -->
+- [x] Visual Depth & Polish
+    - [x] Add depth shadows to cassettes when stacked <!-- id: 26 -->
+    - [x] Add insertion animation when cassette drops <!-- id: 27 -->
+    - [x] Add subtle plastic reflections <!-- id: 28 -->
+- [x] Audio Enhancement
+    - [x] Setup audio file infrastructure for real sounds <!-- id: 29 -->
+- [x] Interactive Feedback
+    - [x] Add haptic vibration on cassette insertion <!-- id: 30 -->
+    - [x] Add queue system for multiple songs <!-- id: 42 -->
+    - [x] Add volume control to Player (Redesigned to integrated slider) <!-- id: 46 -->
+    - [x] Fix volume slider placement (Moved to bottom right) <!-- id: 49 -->
+    - [x] Fix sticky tape labels (Moved inside draggable component) <!-- id: 50 -->
+    - [x] Optimize drag performance (Replaced filter with boxShadow) <!-- id: 51 -->
+    - [x] Fix play/pause interruption (Restored onDuration callback) <!-- id: 52 -->
+    - [x] Replace ReactPlayer with HTML5 Audio element <!-- id: 53 -->
+    - [x] Remove background whir sound (Disabled synthetic audio) <!-- id: 54 -->
+- [x] Production readiness
+    - [x] Remove debug console.logs <!-- id: 55 -->
+    - [x] Clean code restoration <!-- id: 56 -->
+    - [x] Add cassette logo and favicon <!-- id: 57 -->
+    - [x] Cleanup (Remove test files, unused deps) <!-- id: 58 -->
+    - [x] Fix playback issues (forceAudio for mp4) <!-- id: 47 -->
+    - [x] Fix console errors (onDuration) <!-- id: 48 -->
+    - [x] Add Telugu language filter (Auto-append) <!-- id: 43 -->
+- [ ] Phase 1: Essentials
+    - [x] Implement Persistence (localStorage for mixes) <!-- id: 59 -->
+    - [x] Implement Seeking (Interactive progress bar) <!-- id: 60 -->
+- [ ] Phase 2: Experience
+    - [x] Implement Keyboard Shortcuts (Space, Arrows) <!-- id: 61 -->
+    - [x] Add Loading States & Error Toasts <!-- id: 62 -->
+    - [x] Add Loading States & Error Toasts <!-- id: 62 -->
+- [x] Phase 3: Rich Features
+    - [x] Implement Retro Visualizer (Canvas/CSS) <!-- id: 63 -->
+    - [x] Implement Hero Lyrics Mode (Slideshow + Lyrics) <!-- id: 66 -->
+    - [x] Implement Lyrics Fetching API <!-- id: 67 -->
+    - [x] Implement Playlist Management (Delete/Reorder) <!-- id: 64 -->
+    - [x] Implement Lyrics Display <!-- id: 65 -->
+- [ ] Phase 4: Polish & Sharing
+    - [x] Implement Share Functionality (URL-based) <!-- id: 68 -->
+    - [x] Mobile Polish (Touch targets, responsive layout) <!-- id: 69 -->
+    - [x] PWA Configuration (Manifest, Icons) <!-- id: 70 -->
+        - [x] Create manifest.json <!-- id: 71 -->
+        - [x] Generate app icons (192x192, 512x512) <!-- id: 72 -->
+        - [x] Update layout.tsx with PWA meta tags <!-- id: 73 -->
+# TFI Music - Retro Cassette Player Task List
+
+- [ ] Project Initialization
+    - [x] Create Next.js app (`tfi-music`) <!-- id: 0 -->
+    - [x] Install dependencies (`framer-motion`, `lucide-react`, `clsx`, `tailwind-merge`) <!-- id: 1 -->
+    - [x] Configure Tailwind for Retro theme (Fonts, Colors) <!-- id: 2 -->
+- [ ] Core UI Components (SVG)
+    - [x] Create `Cassette` SVG component <!-- id: 3 -->
+    - [x] Create `Walkman` SVG component <!-- id: 4 -->
+    - [x] Create `TapeDeck` container <!-- id: 5 -->
+- [ ] Feature: Mixtape Creation
+    - [x] Implement Title Input <!-- id: 6 -->
+    - [x] Implement "Create Mix" logic (spawning cassettes) <!-- id: 7 -->
+- [ ] Feature: Interactive Player
+    - [x] Implement Drag and Drop (Framer Motion) <!-- id: 8 -->
+    - [x] Implement Play/Pause state <!-- id: 9 -->
+    - [x] Add animations (spinning reels) <!-- id: 10 -->
+- [ ] Spotify Integration (Basic)
+    - [x] Setup NextAuth with Spotify <!-- id: 11 -->
+    - [x] Implement Song Search <!-- id: 12 -->
+    - [x] Connect Player to Spotify Web Playback SDK <!-- id: 13 -->
+- [x] Performance Optimization
+    - [x] Optimize Cassette SVG rendering (remove filters)
+    - [x] Memoize components to prevent drag lag
+- [x] Feature: Realism & Audio
+    - [x] Implement Web Audio API hook for procedural sounds (Click, Insert, Whir) <!-- id: 14 -->
+    - [x] Add sound triggers to interactions (Drag, Drop, Play) <!-- id: 15 -->
+    - [x] Enhance Cassette SVG with gradients and texture <!-- id: 16 -->
+    - [x] Add "Grain" texture overlay to the stage <!-- id: 17 -->
+- [x] Refinement: "TFI TAPES" & Premium Feel
+    - [x] Rebrand to "TFI TAPES" with "Designed by TFIverse.com" footer <!-- id: 18 -->
+    - [x] Make Player draggable <!-- id: 19 -->
+    - [x] Tune drag physics (stiffness, damping) for smoothness <!-- id: 20 -->
+    - [x] Overhaul Audio: Implement complex synthesis for "Real" sounds <!-- id: 21 -->
+    - [x] Tune Cassette physics to match Player (reduce elasticity, subtle animations) <!-- id: 22 -->
+- [x] Optimization: Remove Lag
+    - [x] Remove `feTurbulence` noise filters from Cassette and Stage <!-- id: 23 -->
+    - [x] Replace dynamic noise with static CSS/Image texture if needed <!-- id: 24 -->
+    - [x] Optimize `box-shadow` transitions <!-- id: 25 -->
+- [x] Visual Depth & Polish
+    - [x] Add depth shadows to cassettes when stacked <!-- id: 26 -->
+    - [x] Add insertion animation when cassette drops <!-- id: 27 -->
+    - [x] Add subtle plastic reflections <!-- id: 28 -->
+- [x] Audio Enhancement
+    - [x] Setup audio file infrastructure for real sounds <!-- id: 29 -->
+- [x] Interactive Feedback
+    - [x] Add haptic vibration on cassette insertion <!-- id: 30 -->
+    - [x] Add queue system for multiple songs <!-- id: 42 -->
+    - [x] Add volume control to Player (Redesigned to integrated slider) <!-- id: 46 -->
+    - [x] Fix volume slider placement (Moved to bottom right) <!-- id: 49 -->
+    - [x] Fix sticky tape labels (Moved inside draggable component) <!-- id: 50 -->
+    - [x] Optimize drag performance (Replaced filter with boxShadow) <!-- id: 51 -->
+    - [x] Fix play/pause interruption (Restored onDuration callback) <!-- id: 52 -->
+    - [x] Replace ReactPlayer with HTML5 Audio element <!-- id: 53 -->
+    - [x] Remove background whir sound (Disabled synthetic audio) <!-- id: 54 -->
+- [x] Production readiness
+    - [x] Remove debug console.logs <!-- id: 55 -->
+    - [x] Clean code restoration <!-- id: 56 -->
+    - [x] Add cassette logo and favicon <!-- id: 57 -->
+    - [x] Cleanup (Remove test files, unused deps) <!-- id: 58 -->
+    - [x] Fix playback issues (forceAudio for mp4) <!-- id: 47 -->
+    - [x] Fix console errors (onDuration) <!-- id: 48 -->
+    - [x] Add Telugu language filter (Auto-append) <!-- id: 43 -->
+- [ ] Phase 1: Essentials
+    - [x] Implement Persistence (localStorage for mixes) <!-- id: 59 -->
+    - [x] Implement Seeking (Interactive progress bar) <!-- id: 60 -->
+- [ ] Phase 2: Experience
+    - [x] Implement Keyboard Shortcuts (Space, Arrows) <!-- id: 61 -->
+    - [x] Add Loading States & Error Toasts <!-- id: 62 -->
+    - [x] Add Loading States & Error Toasts <!-- id: 62 -->
+- [x] Phase 3: Rich Features
+    - [x] Implement Retro Visualizer (Canvas/CSS) <!-- id: 63 -->
+    - [x] Implement Hero Lyrics Mode (Slideshow + Lyrics) <!-- id: 66 -->
+    - [x] Implement Lyrics Fetching API <!-- id: 67 -->
+    - [x] Implement Playlist Management (Delete/Reorder) <!-- id: 64 -->
+    - [x] Implement Lyrics Display <!-- id: 65 -->
+- [x] Phase 4: Polish & Sharing
+    - [x] Implement Share Functionality (URL-based) <!-- id: 68 -->
+    - [x] Mobile Polish (Touch targets, responsive layout) <!-- id: 69 -->
+    - [x] PWA Configuration (Manifest, Icons) <!-- id: 70 -->
+        - [x] Create manifest.json <!-- id: 71 -->
+        - [x] Generate app icons (192x192, 512x512) <!-- id: 72 -->
+        - [x] Update layout.tsx with PWA meta tags <!-- id: 73 -->
+        - [x] Create install prompt component <!-- id: 74 -->
+# TFI Music - Retro Cassette Player Task List
+
+- [ ] Project Initialization
+    - [x] Create Next.js app (`tfi-music`) <!-- id: 0 -->
+    - [x] Install dependencies (`framer-motion`, `lucide-react`, `clsx`, `tailwind-merge`) <!-- id: 1 -->
+    - [x] Configure Tailwind for Retro theme (Fonts, Colors) <!-- id: 2 -->
+- [ ] Core UI Components (SVG)
+    - [x] Create `Cassette` SVG component <!-- id: 3 -->
+    - [x] Create `Walkman` SVG component <!-- id: 4 -->
+    - [x] Create `TapeDeck` container <!-- id: 5 -->
+- [ ] Feature: Mixtape Creation
+    - [x] Implement Title Input <!-- id: 6 -->
+    - [x] Implement "Create Mix" logic (spawning cassettes) <!-- id: 7 -->
+- [ ] Feature: Interactive Player
+    - [x] Implement Drag and Drop (Framer Motion) <!-- id: 8 -->
+    - [x] Implement Play/Pause state <!-- id: 9 -->
+    - [x] Add animations (spinning reels) <!-- id: 10 -->
+- [ ] Spotify Integration (Basic)
+    - [x] Setup NextAuth with Spotify <!-- id: 11 -->
+    - [x] Implement Song Search <!-- id: 12 -->
+    - [x] Connect Player to Spotify Web Playback SDK <!-- id: 13 -->
+- [x] Performance Optimization
+    - [x] Optimize Cassette SVG rendering (remove filters)
+    - [x] Memoize components to prevent drag lag
+- [x] Feature: Realism & Audio
+    - [x] Implement Web Audio API hook for procedural sounds (Click, Insert, Whir) <!-- id: 14 -->
+    - [x] Add sound triggers to interactions (Drag, Drop, Play) <!-- id: 15 -->
+    - [x] Enhance Cassette SVG with gradients and texture <!-- id: 16 -->
+    - [x] Add "Grain" texture overlay to the stage <!-- id: 17 -->
+- [x] Refinement: "TFI TAPES" & Premium Feel
+    - [x] Rebrand to "TFI TAPES" with "Designed by TFIverse.com" footer <!-- id: 18 -->
+    - [x] Make Player draggable <!-- id: 19 -->
+    - [x] Tune drag physics (stiffness, damping) for smoothness <!-- id: 20 -->
+    - [x] Overhaul Audio: Implement complex synthesis for "Real" sounds <!-- id: 21 -->
+    - [x] Tune Cassette physics to match Player (reduce elasticity, subtle animations) <!-- id: 22 -->
+- [x] Optimization: Remove Lag
+    - [x] Remove `feTurbulence` noise filters from Cassette and Stage <!-- id: 23 -->
+    - [x] Replace dynamic noise with static CSS/Image texture if needed <!-- id: 24 -->
+    - [x] Optimize `box-shadow` transitions <!-- id: 25 -->
+- [x] Visual Depth & Polish
+    - [x] Add depth shadows to cassettes when stacked <!-- id: 26 -->
+    - [x] Add insertion animation when cassette drops <!-- id: 27 -->
+    - [x] Add subtle plastic reflections <!-- id: 28 -->
+- [x] Audio Enhancement
+    - [x] Setup audio file infrastructure for real sounds <!-- id: 29 -->
+- [x] Interactive Feedback
+    - [x] Add haptic vibration on cassette insertion <!-- id: 30 -->
+    - [x] Add queue system for multiple songs <!-- id: 42 -->
+    - [x] Add volume control to Player (Redesigned to integrated slider) <!-- id: 46 -->
+    - [x] Fix volume slider placement (Moved to bottom right) <!-- id: 49 -->
+    - [x] Fix sticky tape labels (Moved inside draggable component) <!-- id: 50 -->
+    - [x] Optimize drag performance (Replaced filter with boxShadow) <!-- id: 51 -->
+    - [x] Fix play/pause interruption (Restored onDuration callback) <!-- id: 52 -->
+    - [x] Replace ReactPlayer with HTML5 Audio element <!-- id: 53 -->
+    - [x] Remove background whir sound (Disabled synthetic audio) <!-- id: 54 -->
+- [x] Production readiness
+    - [x] Remove debug console.logs <!-- id: 55 -->
+    - [x] Clean code restoration <!-- id: 56 -->
+    - [x] Add cassette logo and favicon <!-- id: 57 -->
+    - [x] Cleanup (Remove test files, unused deps) <!-- id: 58 -->
+    - [x] Fix playback issues (forceAudio for mp4) <!-- id: 47 -->
+    - [x] Fix console errors (onDuration) <!-- id: 48 -->
+    - [x] Add Telugu language filter (Auto-append) <!-- id: 43 -->
+- [ ] Phase 1: Essentials
+    - [x] Implement Persistence (localStorage for mixes) <!-- id: 59 -->
+    - [x] Implement Seeking (Interactive progress bar) <!-- id: 60 -->
+- [ ] Phase 2: Experience
+    - [x] Implement Keyboard Shortcuts (Space, Arrows) <!-- id: 61 -->
+    - [x] Add Loading States & Error Toasts <!-- id: 62 -->
+    - [x] Add Loading States & Error Toasts <!-- id: 62 -->
+- [x] Phase 3: Rich Features
+    - [x] Implement Retro Visualizer (Canvas/CSS) <!-- id: 63 -->
+    - [x] Implement Hero Lyrics Mode (Slideshow + Lyrics) <!-- id: 66 -->
+    - [x] Implement Lyrics Fetching API <!-- id: 67 -->
+    - [x] Implement Playlist Management (Delete/Reorder) <!-- id: 64 -->
+    - [x] Implement Lyrics Display <!-- id: 65 -->
+- [x] Phase 4: Polish & Sharing
+    - [x] Implement Share Functionality (URL-based) <!-- id: 68 -->
+    - [x] Mobile Polish (Touch targets, responsive layout) <!-- id: 69 -->
+    - [x] PWA Configuration (Manifest, Icons) <!-- id: 70 -->
+        - [x] Create manifest.json <!-- id: 71 -->
+        - [x] Generate app icons (192x192, 512x512) <!-- id: 72 -->
+        - [x] Update layout.tsx with PWA meta tags <!-- id: 73 -->
+        - [x] Create install prompt component <!-- id: 74 -->
+        - [x] Add service worker for offline support <!-- id: 75 -->
+- [ ] Phase 5: Enhancements
+    - [ ] Implement Advanced Visualizers (Wave, Circle, Bars) <!-- id: 76 -->
+    - [ ] Performance Audit & Optimization <!-- id: 77 -->
+- [x] Phase 6: Customization
+    - [x] Implement Player Skins (Restricted to Premium Silver) <!-- id: 78 -->
+- [x] Add Pink Floral Luxury Theme <!-- id: 81 -->
+- [ ] Phase 1: Essentials
+    - [x] Implement Persistence (localStorage for mixes) <!-- id: 59 -->
+    - [x] Implement Seeking (Interactive progress bar) <!-- id: 60 -->
+- [ ] Phase 2: Experience
+    - [x] Implement Keyboard Shortcuts (Space, Arrows) <!-- id: 61 -->
+    - [x] Add Loading States & Error Toasts <!-- id: 62 -->
+    - [x] Add Loading States & Error Toasts <!-- id: 62 -->
+- [x] Phase 3: Rich Features
+    - [x] Implement Retro Visualizer (Canvas/CSS) <!-- id: 63 -->
+    - [x] Implement Hero Lyrics Mode (Slideshow + Lyrics) <!-- id: 66 -->
+    - [x] Implement Lyrics Fetching API <!-- id: 67 -->
+    - [x] Implement Playlist Management (Delete/Reorder) <!-- id: 64 -->
+    - [x] Implement Lyrics Display <!-- id: 65 -->
+- [x] Phase 4: Polish & Sharing
+    - [x] Implement Share Functionality (URL-based) <!-- id: 68 -->
+    - [x] Mobile Polish (Touch targets, responsive layout) <!-- id: 69 -->
+    - [x] PWA Configuration (Manifest, Icons) <!-- id: 70 -->
+        - [x] Create manifest.json <!-- id: 71 -->
+        - [x] Generate app icons (192x192, 512x512) <!-- id: 72 -->
+        - [x] Update layout.tsx with PWA meta tags <!-- id: 73 -->
+# TFI Music - Retro Cassette Player Task List
+
+- [ ] Project Initialization
+    - [x] Create Next.js app (`tfi-music`) <!-- id: 0 -->
+    - [x] Install dependencies (`framer-motion`, `lucide-react`, `clsx`, `tailwind-merge`) <!-- id: 1 -->
+    - [x] Configure Tailwind for Retro theme (Fonts, Colors) <!-- id: 2 -->
+- [ ] Core UI Components (SVG)
+    - [x] Create `Cassette` SVG component <!-- id: 3 -->
+    - [x] Create `Walkman` SVG component <!-- id: 4 -->
+    - [x] Create `TapeDeck` container <!-- id: 5 -->
+- [ ] Feature: Mixtape Creation
+    - [x] Implement Title Input <!-- id: 6 -->
+    - [x] Implement "Create Mix" logic (spawning cassettes) <!-- id: 7 -->
+- [ ] Feature: Interactive Player
+    - [x] Implement Drag and Drop (Framer Motion) <!-- id: 8 -->
+    - [x] Implement Play/Pause state <!-- id: 9 -->
+    - [x] Add animations (spinning reels) <!-- id: 10 -->
+- [ ] Spotify Integration (Basic)
+    - [x] Setup NextAuth with Spotify <!-- id: 11 -->
+    - [x] Implement Song Search <!-- id: 12 -->
+    - [x] Connect Player to Spotify Web Playback SDK <!-- id: 13 -->
+- [x] Performance Optimization
+    - [x] Optimize Cassette SVG rendering (remove filters)
+    - [x] Memoize components to prevent drag lag
+- [x] Feature: Realism & Audio
+    - [x] Implement Web Audio API hook for procedural sounds (Click, Insert, Whir) <!-- id: 14 -->
+    - [x] Add sound triggers to interactions (Drag, Drop, Play) <!-- id: 15 -->
+    - [x] Enhance Cassette SVG with gradients and texture <!-- id: 16 -->
+    - [x] Add "Grain" texture overlay to the stage <!-- id: 17 -->
+- [x] Refinement: "TFI TAPES" & Premium Feel
+    - [x] Rebrand to "TFI TAPES" with "Designed by TFIverse.com" footer <!-- id: 18 -->
+    - [x] Make Player draggable <!-- id: 19 -->
+    - [x] Tune drag physics (stiffness, damping) for smoothness <!-- id: 20 -->
+    - [x] Overhaul Audio: Implement complex synthesis for "Real" sounds <!-- id: 21 -->
+    - [x] Tune Cassette physics to match Player (reduce elasticity, subtle animations) <!-- id: 22 -->
+- [x] Optimization: Remove Lag
+    - [x] Remove `feTurbulence` noise filters from Cassette and Stage <!-- id: 23 -->
+    - [x] Replace dynamic noise with static CSS/Image texture if needed <!-- id: 24 -->
+    - [x] Optimize `box-shadow` transitions <!-- id: 25 -->
+- [x] Visual Depth & Polish
+    - [x] Add depth shadows to cassettes when stacked <!-- id: 26 -->
+    - [x] Add insertion animation when cassette drops <!-- id: 27 -->
+    - [x] Add subtle plastic reflections <!-- id: 28 -->
+- [x] Audio Enhancement
+    - [x] Setup audio file infrastructure for real sounds <!-- id: 29 -->
+- [x] Interactive Feedback
+    - [x] Add haptic vibration on cassette insertion <!-- id: 30 -->
+    - [x] Add queue system for multiple songs <!-- id: 42 -->
+    - [x] Add volume control to Player (Redesigned to integrated slider) <!-- id: 46 -->
+    - [x] Fix volume slider placement (Moved to bottom right) <!-- id: 49 -->
+    - [x] Fix sticky tape labels (Moved inside draggable component) <!-- id: 50 -->
+    - [x] Optimize drag performance (Replaced filter with boxShadow) <!-- id: 51 -->
+    - [x] Fix play/pause interruption (Restored onDuration callback) <!-- id: 52 -->
+    - [x] Replace ReactPlayer with HTML5 Audio element <!-- id: 53 -->
+    - [x] Remove background whir sound (Disabled synthetic audio) <!-- id: 54 -->
+- [x] Production readiness
+    - [x] Remove debug console.logs <!-- id: 55 -->
+    - [x] Clean code restoration <!-- id: 56 -->
+    - [x] Add cassette logo and favicon <!-- id: 57 -->
+    - [x] Cleanup (Remove test files, unused deps) <!-- id: 58 -->
+    - [x] Fix playback issues (forceAudio for mp4) <!-- id: 47 -->
+    - [x] Fix console errors (onDuration) <!-- id: 48 -->
+    - [x] Add Telugu language filter (Auto-append) <!-- id: 43 -->
+- [ ] Phase 1: Essentials
+    - [x] Implement Persistence (localStorage for mixes) <!-- id: 59 -->
+    - [x] Implement Seeking (Interactive progress bar) <!-- id: 60 -->
+- [ ] Phase 2: Experience
+    - [x] Implement Keyboard Shortcuts (Space, Arrows) <!-- id: 61 -->
+    - [x] Add Loading States & Error Toasts <!-- id: 62 -->
+    - [x] Add Loading States & Error Toasts <!-- id: 62 -->
+- [x] Phase 3: Rich Features
+    - [x] Implement Retro Visualizer (Canvas/CSS) <!-- id: 63 -->
+    - [x] Implement Hero Lyrics Mode (Slideshow + Lyrics) <!-- id: 66 -->
+    - [x] Implement Lyrics Fetching API <!-- id: 67 -->
+    - [x] Implement Playlist Management (Delete/Reorder) <!-- id: 64 -->
+    - [x] Implement Lyrics Display <!-- id: 65 -->
+- [x] Phase 4: Polish & Sharing
+    - [x] Implement Share Functionality (URL-based) <!-- id: 68 -->
+    - [x] Mobile Polish (Touch targets, responsive layout) <!-- id: 69 -->
+    - [x] PWA Configuration (Manifest, Icons) <!-- id: 70 -->
+        - [x] Create manifest.json <!-- id: 71 -->
+        - [x] Generate app icons (192x192, 512x512) <!-- id: 72 -->
+        - [x] Update layout.tsx with PWA meta tags <!-- id: 73 -->
+        - [x] Create install prompt component <!-- id: 74 -->
+        - [x] Add service worker for offline support <!-- id: 75 -->
+- [ ] Phase 5: Enhancements
+    - [ ] Implement Advanced Visualizers (Wave, Circle, Bars) <!-- id: 76 -->
+    - [ ] Performance Audit & Optimization <!-- id: 77 -->
+- [x] Phase 6: Customization
+    - [x] Implement Player Skins (Restricted to Premium Silver) <!-- id: 78 -->
+- [x] Add Pink Floral Luxury Theme <!-- id: 81 -->
+- [x] Implement 15 New Themes (Solid & Ultra-Premium) <!-- id: 82 -->
+    - [x] Create `Walkman` SVG component <!-- id: 4 -->
+    - [x] Create `TapeDeck` container <!-- id: 5 -->
+- [ ] Feature: Mixtape Creation
+    - [x] Implement Title Input <!-- id: 6 -->
+    - [x] Implement "Create Mix" logic (spawning cassettes) <!-- id: 7 -->
+- [ ] Feature: Interactive Player
+    - [x] Implement Drag and Drop (Framer Motion) <!-- id: 8 -->
+    - [x] Implement Play/Pause state <!-- id: 9 -->
+    - [x] Add animations (spinning reels) <!-- id: 10 -->
+- [ ] Spotify Integration (Basic)
+    - [x] Setup NextAuth with Spotify <!-- id: 11 -->
+    - [x] Implement Song Search <!-- id: 12 -->
+    - [x] Connect Player to Spotify Web Playback SDK <!-- id: 13 -->
+- [x] Performance Optimization
+    - [x] Optimize Cassette SVG rendering (remove filters)
+    - [x] Memoize components to prevent drag lag
+- [x] Feature: Realism & Audio
+    - [x] Implement Web Audio API hook for procedural sounds (Click, Insert, Whir) <!-- id: 14 -->
+    - [x] Add sound triggers to interactions (Drag, Drop, Play) <!-- id: 15 -->
+    - [x] Enhance Cassette SVG with gradients and texture <!-- id: 16 -->
+    - [x] Add "Grain" texture overlay to the stage <!-- id: 17 -->
+- [x] Refinement: "TFI TAPES" & Premium Feel
+    - [x] Rebrand to "TFI TAPES" with "Designed by TFIverse.com" footer <!-- id: 18 -->
+    - [x] Make Player draggable <!-- id: 19 -->
+    - [x] Tune drag physics (stiffness, damping) for smoothness <!-- id: 20 -->
+    - [x] Overhaul Audio: Implement complex synthesis for "Real" sounds <!-- id: 21 -->
+    - [x] Tune Cassette physics to match Player (reduce elasticity, subtle animations) <!-- id: 22 -->
+- [x] Optimization: Remove Lag
+    - [x] Remove `feTurbulence` noise filters from Cassette and Stage <!-- id: 23 -->
+    - [x] Replace dynamic noise with static CSS/Image texture if needed <!-- id: 24 -->
+    - [x] Optimize `box-shadow` transitions <!-- id: 25 -->
+- [x] Visual Depth & Polish
+    - [x] Add depth shadows to cassettes when stacked <!-- id: 26 -->
+    - [x] Add insertion animation when cassette drops <!-- id: 27 -->
+    - [x] Add subtle plastic reflections <!-- id: 28 -->
+- [x] Audio Enhancement
+    - [x] Setup audio file infrastructure for real sounds <!-- id: 29 -->
+- [x] Interactive Feedback
+    - [x] Add haptic vibration on cassette insertion <!-- id: 30 -->
+    - [x] Add queue system for multiple songs <!-- id: 42 -->
+    - [x] Add volume control to Player (Redesigned to integrated slider) <!-- id: 46 -->
+    - [x] Fix volume slider placement (Moved to bottom right) <!-- id: 49 -->
+    - [x] Fix sticky tape labels (Moved inside draggable component) <!-- id: 50 -->
+    - [x] Optimize drag performance (Replaced filter with boxShadow) <!-- id: 51 -->
+    - [x] Fix play/pause interruption (Restored onDuration callback) <!-- id: 52 -->
+    - [x] Replace ReactPlayer with HTML5 Audio element <!-- id: 53 -->
+    - [x] Remove background whir sound (Disabled synthetic audio) <!-- id: 54 -->
+- [x] Production readiness
+    - [x] Remove debug console.logs <!-- id: 55 -->
+    - [x] Clean code restoration <!-- id: 56 -->
+    - [x] Add cassette logo and favicon <!-- id: 57 -->
+    - [x] Cleanup (Remove test files, unused deps) <!-- id: 58 -->
+    - [x] Fix playback issues (forceAudio for mp4) <!-- id: 47 -->
+    - [x] Fix console errors (onDuration) <!-- id: 48 -->
+    - [x] Add Telugu language filter (Auto-append) <!-- id: 43 -->
+- [ ] Phase 1: Essentials
+    - [x] Implement Persistence (localStorage for mixes) <!-- id: 59 -->
+    - [x] Implement Seeking (Interactive progress bar) <!-- id: 60 -->
+- [ ] Phase 2: Experience
+    - [x] Implement Keyboard Shortcuts (Space, Arrows) <!-- id: 61 -->
+    - [x] Add Loading States & Error Toasts <!-- id: 62 -->
+    - [x] Add Loading States & Error Toasts <!-- id: 62 -->
+- [x] Phase 3: Rich Features
+    - [x] Implement Retro Visualizer (Canvas/CSS) <!-- id: 63 -->
+    - [x] Implement Hero Lyrics Mode (Slideshow + Lyrics) <!-- id: 66 -->
+    - [x] Implement Lyrics Fetching API <!-- id: 67 -->
+    - [x] Implement Playlist Management (Delete/Reorder) <!-- id: 64 -->
+    - [x] Implement Lyrics Display <!-- id: 65 -->
+- [x] Phase 4: Polish & Sharing
+    - [x] Implement Share Functionality (URL-based) <!-- id: 68 -->
+    - [x] Mobile Polish (Touch targets, responsive layout) <!-- id: 69 -->
+    - [x] PWA Configuration (Manifest, Icons) <!-- id: 70 -->
+        - [x] Create manifest.json <!-- id: 71 -->
+        - [x] Generate app icons (192x192, 512x512) <!-- id: 72 -->
+        - [x] Update layout.tsx with PWA meta tags <!-- id: 73 -->
+        - [x] Create install prompt component <!-- id: 74 -->
+        - [x] Add service worker for offline support <!-- id: 75 -->
+- [ ] Phase 5: Enhancements
+    - [ ] Implement Advanced Visualizers (Wave, Circle, Bars) <!-- id: 76 -->
+    - [ ] Performance Audit & Optimization <!-- id: 77 -->
+- [x] Phase 6: Customization
+    - [x] Implement Player Skins (Restricted to Premium Silver) <!-- id: 78 -->
+- [x] Add Pink Floral Luxury Theme <!-- id: 81 -->
+- [ ] Phase 1: Essentials
+    - [x] Implement Persistence (localStorage for mixes) <!-- id: 59 -->
+    - [x] Implement Seeking (Interactive progress bar) <!-- id: 60 -->
+- [ ] Phase 2: Experience
+    - [x] Implement Keyboard Shortcuts (Space, Arrows) <!-- id: 61 -->
+    - [x] Add Loading States & Error Toasts <!-- id: 62 -->
+    - [x] Add Loading States & Error Toasts <!-- id: 62 -->
+- [x] Phase 3: Rich Features
+    - [x] Implement Retro Visualizer (Canvas/CSS) <!-- id: 63 -->
+    - [x] Implement Hero Lyrics Mode (Slideshow + Lyrics) <!-- id: 66 -->
+    - [x] Implement Lyrics Fetching API <!-- id: 67 -->
+    - [x] Implement Playlist Management (Delete/Reorder) <!-- id: 64 -->
+    - [x] Implement Lyrics Display <!-- id: 65 -->
+- [x] Phase 4: Polish & Sharing
+    - [x] Implement Share Functionality (URL-based) <!-- id: 68 -->
+    - [x] Mobile Polish (Touch targets, responsive layout) <!-- id: 69 -->
+    - [x] PWA Configuration (Manifest, Icons) <!-- id: 70 -->
+        - [x] Create manifest.json <!-- id: 71 -->
+        - [x] Generate app icons (192x192, 512x512) <!-- id: 72 -->
+        - [x] Update layout.tsx with PWA meta tags <!-- id: 73 -->
+# TFI Music - Retro Cassette Player Task List
+
+- [ ] Project Initialization
+    - [x] Create Next.js app (`tfi-music`) <!-- id: 0 -->
+    - [x] Install dependencies (`framer-motion`, `lucide-react`, `clsx`, `tailwind-merge`) <!-- id: 1 -->
+    - [x] Configure Tailwind for Retro theme (Fonts, Colors) <!-- id: 2 -->
+- [ ] Core UI Components (SVG)
+    - [x] Create `Cassette` SVG component <!-- id: 3 -->
+    - [x] Create `Walkman` SVG component <!-- id: 4 -->
+    - [x] Create `TapeDeck` container <!-- id: 5 -->
+- [ ] Feature: Mixtape Creation
+    - [x] Implement Title Input <!-- id: 6 -->
+    - [x] Implement "Create Mix" logic (spawning cassettes) <!-- id: 7 -->
+- [ ] Feature: Interactive Player
+    - [x] Implement Drag and Drop (Framer Motion) <!-- id: 8 -->
+    - [x] Implement Play/Pause state <!-- id: 9 -->
+    - [x] Add animations (spinning reels) <!-- id: 10 -->
+- [ ] Spotify Integration (Basic)
+    - [x] Setup NextAuth with Spotify <!-- id: 11 -->
+    - [x] Implement Song Search <!-- id: 12 -->
+    - [x] Connect Player to Spotify Web Playback SDK <!-- id: 13 -->
+- [x] Performance Optimization
+    - [x] Optimize Cassette SVG rendering (remove filters)
+    - [x] Memoize components to prevent drag lag
+- [x] Feature: Realism & Audio
+    - [x] Implement Web Audio API hook for procedural sounds (Click, Insert, Whir) <!-- id: 14 -->
+    - [x] Add sound triggers to interactions (Drag, Drop, Play) <!-- id: 15 -->
+    - [x] Enhance Cassette SVG with gradients and texture <!-- id: 16 -->
+    - [x] Add "Grain" texture overlay to the stage <!-- id: 17 -->
+- [x] Refinement: "TFI TAPES" & Premium Feel
+    - [x] Rebrand to "TFI TAPES" with "Designed by TFIverse.com" footer <!-- id: 18 -->
+    - [x] Make Player draggable <!-- id: 19 -->
+    - [x] Tune drag physics (stiffness, damping) for smoothness <!-- id: 20 -->
+    - [x] Overhaul Audio: Implement complex synthesis for "Real" sounds <!-- id: 21 -->
+    - [x] Tune Cassette physics to match Player (reduce elasticity, subtle animations) <!-- id: 22 -->
+- [x] Optimization: Remove Lag
+    - [x] Remove `feTurbulence` noise filters from Cassette and Stage <!-- id: 23 -->
+    - [x] Replace dynamic noise with static CSS/Image texture if needed <!-- id: 24 -->
+    - [x] Optimize `box-shadow` transitions <!-- id: 25 -->
+- [x] Visual Depth & Polish
+    - [x] Add depth shadows to cassettes when stacked <!-- id: 26 -->
+    - [x] Add insertion animation when cassette drops <!-- id: 27 -->
+    - [x] Add subtle plastic reflections <!-- id: 28 -->
+- [x] Audio Enhancement
+    - [x] Setup audio file infrastructure for real sounds <!-- id: 29 -->
+- [x] Interactive Feedback
+    - [x] Add haptic vibration on cassette insertion <!-- id: 30 -->
+    - [x] Add queue system for multiple songs <!-- id: 42 -->
+    - [x] Add volume control to Player (Redesigned to integrated slider) <!-- id: 46 -->
+    - [x] Fix volume slider placement (Moved to bottom right) <!-- id: 49 -->
+    - [x] Fix sticky tape labels (Moved inside draggable component) <!-- id: 50 -->
+    - [x] Optimize drag performance (Replaced filter with boxShadow) <!-- id: 51 -->
+    - [x] Fix play/pause interruption (Restored onDuration callback) <!-- id: 52 -->
+    - [x] Replace ReactPlayer with HTML5 Audio element <!-- id: 53 -->
+    - [x] Remove background whir sound (Disabled synthetic audio) <!-- id: 54 -->
+- [x] Production readiness
+    - [x] Remove debug console.logs <!-- id: 55 -->
+    - [x] Clean code restoration <!-- id: 56 -->
+    - [x] Add cassette logo and favicon <!-- id: 57 -->
+    - [x] Cleanup (Remove test files, unused deps) <!-- id: 58 -->
+    - [x] Fix playback issues (forceAudio for mp4) <!-- id: 47 -->
+    - [x] Fix console errors (onDuration) <!-- id: 48 -->
+    - [x] Add Telugu language filter (Auto-append) <!-- id: 43 -->
+- [ ] Phase 1: Essentials
+    - [x] Implement Persistence (localStorage for mixes) <!-- id: 59 -->
+    - [x] Implement Seeking (Interactive progress bar) <!-- id: 60 -->
+- [ ] Phase 2: Experience
+    - [x] Implement Keyboard Shortcuts (Space, Arrows) <!-- id: 61 -->
+    - [x] Add Loading States & Error Toasts <!-- id: 62 -->
+    - [x] Add Loading States & Error Toasts <!-- id: 62 -->
+- [x] Phase 3: Rich Features
+    - [x] Implement Retro Visualizer (Canvas/CSS) <!-- id: 63 -->
+    - [x] Implement Hero Lyrics Mode (Slideshow + Lyrics) <!-- id: 66 -->
+    - [x] Implement Lyrics Fetching API <!-- id: 67 -->
+    - [x] Implement Playlist Management (Delete/Reorder) <!-- id: 64 -->
+    - [x] Implement Lyrics Display <!-- id: 65 -->
+- [x] Phase 4: Polish & Sharing
+    - [x] Implement Share Functionality (URL-based) <!-- id: 68 -->
+    - [x] Mobile Polish (Touch targets, responsive layout) <!-- id: 69 -->
+    - [x] PWA Configuration (Manifest, Icons) <!-- id: 70 -->
+        - [x] Create manifest.json <!-- id: 71 -->
+        - [x] Generate app icons (192x192, 512x512) <!-- id: 72 -->
+        - [x] Update layout.tsx with PWA meta tags <!-- id: 73 -->
+        - [x] Create install prompt component <!-- id: 74 -->
+        - [x] Add service worker for offline support <!-- id: 75 -->
+- [ ] Phase 5: Enhancements
+    - [ ] Implement Advanced Visualizers (Wave, Circle, Bars) <!-- id: 76 -->
+    - [ ] Performance Audit & Optimization <!-- id: 77 -->
+- [x] Phase 6: Customization
+    - [x] Implement Player Skins (Restricted to Premium Silver) <!-- id: 78 -->
+- [x] Add Pink Floral Luxury Theme <!-- id: 81 -->
+- [x] Implement 15 New Themes (Solid & Ultra-Premium) <!-- id: 82 -->
+- [x] Fix Volume Slider & Restore Retro Silver UI <!-- id: 83 -->
+- [x] Align Buttons & Colors to User Preference <!-- id: 84 -->
+- [x] Final Polish (Theme Switcher, Scrollbar, Performance) <!-- id: 85 -->
+- [x] Sony Walkman Redesign & Hover Theme Switcher <!-- id: 86 -->
+- [x] Mobile Optimization (Responsive Layout, Touch-Friendly Theme Switcher) <!-- id: 87 -->
+- [x] Fix syntax errors in `player.tsx` <!-- id: 4 -->
+- [x] Implement global drag performance optimization <!-- id: 5 -->
+- [x] Restore song name and artist text to cassette label <!-- id: 6 -->
+- [x] Fix cassette text visibility (contrast issue) <!-- id: 7 -->
+- [x] Add new themes (Snow White, Midnight Blue, Retro Gold) <!-- id: 8 -->
+- [x] Remove scrollbars from main stage <!-- id: 9 -->
+- [x] Limit max cassettes to 10 <!-- id: 10 -->
+- [x] Verify footer and install app icon layout <!-- id: 11 -->
+- [x] Visualizer Performance Optimization (Removed laggy themes) <!-- id: 88 -->
+- [x] Implement Realistic Cassette Sound Effects (Synthesized Fallback) <!-- id: 89 -->
+- [x] Redesign Volume Control (Vertical Fader) <!-- id: 79 -->
+- [x] Polish Icons & UI (Brushed Metal, Text Decoding Fix) <!-- id: 80 -->
+- [x] Remove laggy themes (Aurora, Holographic, etc.) <!-- id: 90 -->
+- [x] Add progress bar to player <!-- id: 91 -->
+- [x] Update all themes to match Retro Silver quality <!-- id: 92 -->
+- [x] Create realistic sound files for cassette player <!-- id: 93 -->
+- [x] Rebuild player from scratch with clean, simple design <!-- id: 94 -->
+- [x] Refine player design (size, screws, cassette window) to match v0.dev reference <!-- id: 95 -->
+- [x] Restore player size to larger original dimensions <!-- id: 96 -->
+- [x] Optimize player proportions for realism (340px width, tighter spacing) <!-- id: 97 -->
+- [x] Set fixed player height to 550px <!-- id: 98 -->
+- [x] Adjust screw positions for new dimensions <!-- id: 99 -->
+- [x] Fix vertical spacing (gaps) for 550px height <!-- id: 100 -->
+- [x] Implement "Stitch" Theme (White/Blue) & Remove Switcher <!-- id: 101 -->
+- [x] Feature: Studio Mode (Draggable Assets)
+    - [x] Make "Cassette" controls move with the cassette (Smart Menu) <!-- id: 102 -->
+    - [x] Make "Player" draggable and constrained to page <!-- id: 103 -->
+    - [x] Make Header Logo draggable independently <!-- id: 104 -->
+    - [x] Make Header Control Buttons draggable independently <!-- id: 105 -->
+    - [x] Make "Your Mixtapes" title draggable <!-- id: 106 -->
+    - [x] Fix "Stuck Cassette" bug (Restore Drag-to-Play functionality) <!-- id: 107 -->
+- [ ] Phase 7: Mobile iPod Mode
+    - [x] Implement Device Detection (Mobile vs Desktop) <!-- id: 108 -->
+    - [x] Create `iPod` Container Component <!-- id: 109 -->
+    - [/] Implement Click Wheel Interface (Touch controls) <!-- id: 110 -->
+    - [/] Create iPod Screen OS (Menus: Playlists, Cover Flow, Now Playing) <!-- id: 111 -->
+    - [ ] Integrate Player Logic with iPod Controls <!-- id: 112 -->
+    - [ ] Add Haptic Feedback for Wheel Clicks <!-- id: 113 -->

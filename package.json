@@ -1,0 +1,136 @@
+{
+  "name": "melora-tunes",
+  "version": "1.0.0-beta.1",
+  "description": "Premium music player with hi-fi streaming",
+  "author": "Null Gravity Devs <support@meloratunes.com>",
+  "private": true,
+  "main": "desktop_app/main.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "electron": "concurrently -k \"cross-env BROWSER=none npm run dev\" \"wait-on tcp:3000 && node scripts/launch-electron.js\"",
+    "electron:build": "cross-env IS_ELECTRON_BUILD=true next build && node scripts/prepare-electron.js && electron-builder --win --x64",
+    "electron:build:win": "cross-env IS_ELECTRON_BUILD=true next build && node scripts/prepare-electron.js && electron-builder --win --x64",
+    "electron:build:linux": "cross-env IS_ELECTRON_BUILD=true next build && node scripts/prepare-electron.js && electron-builder --linux --x64",
+    "cap:build": "node scripts/build-cap.js",
+    "cap:open": "npx cap open android",
+    "cap:run": "npx cap run android"
+  },
+  "dependencies": {
+    "@awesome-cordova-plugins/music-controls": "^9.2.0",
+    "@capacitor-community/http": "^1.4.1",
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/app": "^8.1.0",
+    "@capacitor/cli": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/preferences": "^8.0.0",
+    "@ducanh2912/next-pwa": "^10.2.9",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@tailwindcss/typography": "^0.5.19",
+    "@tanstack/react-virtual": "^3.13.18",
+    "@types/crypto-js": "^4.2.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cordova-plugin-music-controls2": "^3.0.7",
+    "crypto-js": "^4.2.0",
+    "framer-motion": "^12.23.24",
+    "html-to-image": "^1.11.13",
+    "html2canvas": "^1.4.1",
+    "idb-keyval": "^6.2.2",
+    "lucide-react": "^0.554.0",
+    "meyda": "^5.6.3",
+    "music-tempo": "^1.0.3",
+    "next": "16.0.3",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "tailwind-merge": "^3.4.0",
+    "youtubei.js": "^16.0.1"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "electron": "^31.7.7",
+    "electron-builder": "^26.4.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.0.3",
+    "jetifier": "^2.0.0",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "wait-on": "^9.0.3"
+  },
+  "build": {
+    "appId": "com.meloratunes.app",
+    "productName": "Melora Tunes",
+    "directories": {
+      "output": "./dist"
+    },
+    "asarUnpack": [
+      "**/*.node"
+    ],
+    "files": [
+      "desktop_app/main.js",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": ".next/standalone",
+        "to": "standalone",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": ".next/standalone/node_modules",
+        "to": "standalone/node_modules",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "public/app-icon.ico",
+      "signAndEditExecutable": false
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "resources/icons/",
+      "category": "Audio;Music;Player",
+      "synopsis": "Premium music player with retro cassette & iPod experience"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "extends": null
+  }
+}
