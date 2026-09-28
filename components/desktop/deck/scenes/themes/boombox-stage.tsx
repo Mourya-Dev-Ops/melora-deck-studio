@@ -328,105 +328,313 @@ export function BoomboxStage({
             </header>
 
             {/* Sticky Note */}
-            <div className="absolute top-20 left-6 z-20 bg-yellow-100 text-gray-900 p-4 shadow-md transform rotate-1 max-w-[180px]" style={{ fontFamily: "'Permanent Marker', cursive" }}>
-                <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-red-500 shadow-sm border border-red-700" />
-                <p className="text-sm leading-tight">Drag tapes anywhere! Drop on boombox to play 🎵</p>
+            <div className="absolute top-20 left-6 z-20 bg-[#fef08a] text-neutral-900 p-4 shadow-[0_8px_20px_rgba(0,0,0,0.35),0_2px_4px_rgba(0,0,0,0.2)] transform rotate-1 max-w-[190px] rounded-sm border-t border-white/60" style={{ fontFamily: "'Permanent Marker', cursive" }}>
+                {/* 3D Pushpin with shadow */}
+                <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-tr from-red-700 via-red-500 to-red-300 shadow-[0_4px_8px_rgba(0,0,0,0.5)] border border-red-800 flex items-center justify-center">
+                    <div className="w-1.5 h-1.5 rounded-full bg-white/70" />
+                </div>
+                <p className="text-sm leading-tight drop-shadow-sm">Drag tapes anywhere! Drop on boombox to play 🎵</p>
             </div>
 
             {/* BOOMBOX */}
-            <div ref={playerRef} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-full max-w-[550px] px-4">
-                <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-1/2 h-14 border-[14px] border-neutral-700 rounded-t-3xl -z-10 shadow-lg" />
+            <div ref={playerRef} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-full max-w-[550px] px-4 select-none">
+                {/* Heavy Molded Carry Handle */}
+                <div className="absolute -top-11 left-1/2 -translate-x-1/2 w-[55%] h-16 border-[14px] border-neutral-800 rounded-t-[32px] -z-10 shadow-[0_8px_20px_rgba(0,0,0,0.7)] flex items-center justify-center">
+                    {/* Ribbed Center Hand-Grip */}
+                    <div className="w-32 h-3.5 bg-neutral-900 rounded-full border border-neutral-700 shadow-inner flex items-center justify-around px-2">
+                        {[...Array(6)].map((_, i) => (
+                            <div key={i} className="w-1.5 h-full bg-neutral-950 rounded-sm" />
+                        ))}
+                    </div>
+                    {/* Left Pivot Hinge Bolt */}
+                    <div className="absolute -left-3.5 bottom-0 w-4 h-4 rounded-full bg-gradient-to-tr from-neutral-600 via-neutral-400 to-neutral-200 border border-neutral-700 shadow-md flex items-center justify-center">
+                        <div className="w-1.5 h-1.5 rounded-full bg-neutral-900" />
+                    </div>
+                    {/* Right Pivot Hinge Bolt */}
+                    <div className="absolute -right-3.5 bottom-0 w-4 h-4 rounded-full bg-gradient-to-tr from-neutral-600 via-neutral-400 to-neutral-200 border border-neutral-700 shadow-md flex items-center justify-center">
+                        <div className="w-1.5 h-1.5 rounded-full bg-neutral-900" />
+                    </div>
+                </div>
+
                 <div className={clsx(
-                    "bg-yellow-400 w-full rounded-[32px] p-2 shadow-2xl border-b-8 border-r-8 border-black/20 transition-all duration-200",
-                    isOverPlayer && "ring-4 ring-blue-500/50 scale-[1.02]"
+                    "bg-[#f59e0b] w-full rounded-[34px] p-2 shadow-[0_24px_60px_rgba(0,0,0,0.85),0_6px_12px_rgba(0,0,0,0.6)] border-b-[10px] border-r-[8px] border-black/30 transition-all duration-200",
+                    isOverPlayer && "ring-4 ring-blue-500/70 scale-[1.02]"
                 )}>
-                    <div className="bg-yellow-400 border-[10px] border-neutral-700 rounded-[24px] p-4 flex flex-col gap-3 relative overflow-hidden">
+                    {/* Inner Molded Chassis */}
+                    <div className="bg-[#fbbf24] border-[10px] border-neutral-800 rounded-[26px] p-4 flex flex-col gap-3 relative overflow-hidden shadow-inner">
+                        {/* 4 Heavy-Duty Countersunk Hex Corner Bolts */}
                         {['top-3 left-3', 'top-3 right-3', 'bottom-3 left-3', 'bottom-3 right-3'].map((pos, i) => (
-                            <div key={i} className={`absolute ${pos} w-3 h-3 bg-zinc-400 rounded-full flex items-center justify-center shadow-inner`}><div className="w-2 h-0.5 bg-zinc-600 rotate-45" /></div>
+                            <div key={i} className={`absolute ${pos} w-3.5 h-3.5 bg-gradient-to-tr from-neutral-500 via-neutral-300 to-neutral-200 rounded-full flex items-center justify-center shadow-inner border border-neutral-600`}>
+                                <div className="w-1.5 h-1.5 bg-neutral-900 rounded-sm rotate-45" />
+                            </div>
                         ))}
 
+                        {/* Speaker Grilles & Center Deck Section */}
                         <div className="flex gap-3 items-center">
-                            <div className="hidden md:block w-20 h-20 rounded-full border-[5px] border-zinc-700 shadow-inner bg-neutral-800 relative overflow-hidden shrink-0">
-                                <div className="absolute inset-0 opacity-80" style={{ backgroundImage: 'radial-gradient(#000 30%, transparent 31%)', backgroundSize: '4px 4px' }} />
+                            {/* Left High-Output Speaker Grille */}
+                            <div className="hidden md:flex w-24 h-24 rounded-full border-[6px] border-neutral-800 shadow-[inset_0_4px_12px_rgba(0,0,0,0.9),0_4px_8px_rgba(0,0,0,0.5)] bg-neutral-950 relative overflow-hidden shrink-0 items-center justify-center">
+                                {/* Woofer Cone with Bass Pulsing Vibration */}
+                                <motion.div
+                                    animate={isPlaying ? { scale: [1, 1.03, 0.98, 1.025, 1] } : {}}
+                                    transition={{ repeat: Infinity, duration: 0.55, ease: "easeInOut" }}
+                                    className="w-18 h-18 rounded-full bg-gradient-to-tr from-neutral-900 via-neutral-800 to-neutral-700 border-2 border-neutral-800 flex items-center justify-center shadow-inner"
+                                >
+                                    <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-neutral-700 via-neutral-500 to-neutral-300 border border-neutral-600 shadow-md" />
+                                </motion.div>
+                                <div className="absolute inset-0 opacity-75 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#000 35%, transparent 36%)', backgroundSize: '4px 4px' }} />
+                                <div className="absolute inset-0 rounded-full border border-neutral-700/60 pointer-events-none" />
                             </div>
-                            <div className="flex-1 bg-neutral-800 p-2 rounded-lg border-4 border-zinc-700 shadow-inner flex flex-col gap-2">
-                                <div className="relative h-14 rounded border-2 border-zinc-600/50 overflow-hidden" style={{ background: '#9ea792' }}>
-                                    <div className="absolute inset-0 flex justify-between items-end p-2 text-neutral-800">
-                                        <div className="flex flex-col"><span className="text-[8px] font-bold opacity-60 uppercase">Track</span><span className="text-lg font-bold font-mono leading-none">{isLoaded ? String(mixes.findIndex(m => m.id === activeMixId) + 1).padStart(2, '0') : '--'}</span></div>
-                                        <div className="flex flex-col items-center flex-1 mx-2"><span className="text-[10px] font-mono font-bold uppercase truncate max-w-[150px]">{isLoaded ? (currentSong ? decodeHtml(currentSong.name) : activeMix?.title) : 'Insert Tape'}</span>{isLoaded && activeQuality && <QualityBadge quality={activeQuality} variant="mini" />}</div>
-                                        <div className="flex flex-col items-end"><span className="text-[8px] font-bold opacity-60 uppercase">Time</span><span className="text-base font-bold font-mono leading-none">{displayedTime}</span></div>
+
+                            {/* Center Deck Chamber */}
+                            <div className="flex-1 bg-neutral-900 p-2.5 rounded-xl border-4 border-neutral-800 shadow-[inset_0_2px_8px_rgba(0,0,0,0.9)] flex flex-col gap-2">
+                                {/* LCD Multi-Function Segment Display */}
+                                <div className="relative h-14 rounded-md border-2 border-neutral-700 shadow-[inset_0_2px_8px_rgba(0,0,0,0.85)] overflow-hidden" style={{ background: '#9ea792' }}>
+                                    <div className="absolute inset-0 pointer-events-none opacity-20" style={{
+                                        background: 'linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,0.2) 50%)',
+                                        backgroundSize: '100% 3px'
+                                    }} />
+                                    <div className="absolute top-0 inset-x-0 h-1/2 bg-gradient-to-b from-white/20 to-transparent pointer-events-none" />
+                                    <div className="absolute inset-0 flex justify-between items-end p-2 text-neutral-900 select-none">
+                                        <div className="flex flex-col">
+                                            <span className="text-[7.5px] font-black uppercase opacity-70 tracking-widest">TRACK</span>
+                                            <span className="text-xl font-bold font-mono leading-none drop-shadow-sm">
+                                                {isLoaded ? String(mixes.findIndex(m => m.id === activeMixId) + 1).padStart(2, '0') : '--'}
+                                            </span>
+                                        </div>
+                                        <div className="flex flex-col items-center flex-1 mx-2 min-w-0">
+                                            <span className="text-[10px] font-mono font-bold uppercase truncate max-w-[170px] drop-shadow-sm">
+                                                {isLoaded ? (currentSong ? decodeHtml(currentSong.name) : activeMix?.title) : 'INSERT TAPE'}
+                                            </span>
+                                            <div className="flex items-center gap-1.5 mt-0.5">
+                                                <span className="text-[7px] font-mono font-bold px-1 rounded bg-black/10 border border-black/10">STEREO</span>
+                                                {isLoaded && activeQuality && <QualityBadge quality={activeQuality} variant="mini" />}
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-col items-end">
+                                            <span className="text-[7.5px] font-black uppercase opacity-70 tracking-widest">TIME</span>
+                                            <span className="text-base font-bold font-mono leading-none drop-shadow-sm">{displayedTime}</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="bg-neutral-900 rounded border border-zinc-700 h-16 relative flex items-center justify-center overflow-hidden">
-                                    {isLoaded && activeMix ? (
-                                        <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="flex gap-6">
-                                            <motion.div animate={isPlaying ? { rotate: 360 } : {}} transition={{ repeat: Infinity, duration: 2, ease: "linear" }} className="w-5 h-5 rounded-full bg-white/20 border border-white/30" />
-                                            <motion.div animate={isPlaying ? { rotate: 360 } : {}} transition={{ repeat: Infinity, duration: 2, ease: "linear" }} className="w-5 h-5 rounded-full bg-white/20 border border-white/30" />
-                                        </motion.div>
-                                    ) : (<span className="text-white/30 text-xs uppercase tracking-wider">Empty</span>)}
-                                    {isLoaded && <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-blue-500 shadow-[0_0_8px_#3b82f6]" />}
+
+                                {/* Smoked Transparent Cassette Well with Dynamic Reel Physics */}
+                                <div className="bg-[#0b0c0f] rounded-lg border border-neutral-700/80 h-16 relative flex items-center justify-between px-6 overflow-hidden shadow-[inset_0_2px_8px_rgba(0,0,0,0.95)]">
+                                    {/* Smoked glass reflection */}
+                                    <div className="absolute top-0 inset-x-0 h-1/2 bg-gradient-to-b from-white/[0.08] to-transparent pointer-events-none" />
+                                    {/* Printed tape run scale */}
+                                    <div className="absolute inset-x-10 top-1 flex justify-between text-[6px] font-mono text-neutral-500 pointer-events-none">
+                                        <span>MIN</span>
+                                        <span>50</span>
+                                        <span>MAX</span>
+                                    </div>
+
+                                    {isLoaded && activeMix ? (() => {
+                                        const leftRadius = 6 + Math.sqrt(Math.max(0, 1 - safeProgress)) * 9;
+                                        const rightRadius = 6 + Math.sqrt(Math.max(0, safeProgress)) * 9;
+
+                                        return (
+                                            <motion.div initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="w-full flex items-center justify-between z-10">
+                                                {/* Left Spool */}
+                                                <div className="relative flex items-center justify-center">
+                                                    <div
+                                                        className="rounded-full bg-[#291c14] border border-[#422e20] flex items-center justify-center transition-all duration-200"
+                                                        style={{ width: `${leftRadius * 2}px`, height: `${leftRadius * 2}px` }}
+                                                    >
+                                                        <motion.div
+                                                            animate={isPlaying ? { rotate: 360 } : {}}
+                                                            transition={{ repeat: Infinity, duration: 2.8, ease: "linear" }}
+                                                            className="w-5 h-5 rounded-full bg-white/30 border border-white/40 shadow-inner flex items-center justify-center"
+                                                        >
+                                                            <div className="w-1.5 h-1.5 rounded-full bg-neutral-900" />
+                                                        </motion.div>
+                                                    </div>
+                                                </div>
+
+                                                {/* Center Tape Bridge & Run Indicator */}
+                                                <div className="flex-grow h-3 mx-2 flex flex-col items-center justify-center">
+                                                    <div className="w-full h-0.5 bg-[#422e20] mb-0.5" />
+                                                    <span className="text-[6.5px] text-amber-300 font-mono font-bold">
+                                                        {Math.round(safeProgress * 100)}%
+                                                    </span>
+                                                </div>
+
+                                                {/* Right Spool */}
+                                                <div className="relative flex items-center justify-center">
+                                                    <div
+                                                        className="rounded-full bg-[#291c14] border border-[#422e20] flex items-center justify-center transition-all duration-200"
+                                                        style={{ width: `${rightRadius * 2}px`, height: `${rightRadius * 2}px` }}
+                                                    >
+                                                        <motion.div
+                                                            animate={isPlaying ? { rotate: 360 } : {}}
+                                                            transition={{ repeat: Infinity, duration: 2.8, ease: "linear" }}
+                                                            className="w-5 h-5 rounded-full bg-white/30 border border-white/40 shadow-inner flex items-center justify-center"
+                                                        >
+                                                            <div className="w-1.5 h-1.5 rounded-full bg-neutral-900" />
+                                                        </motion.div>
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        );
+                                    })() : (
+                                        <div className="w-full flex flex-col items-center justify-center">
+                                            <span className="text-white/40 text-[10px] font-mono font-bold uppercase tracking-widest">NO CASSETTE</span>
+                                            <span className="text-white/20 text-[7.5px] font-mono">DROP TAPE HERE</span>
+                                        </div>
+                                    )}
+
+                                    {/* Electric Cyan LED Head Illumination Strip */}
+                                    {isLoaded && <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-20 h-1 bg-blue-500 rounded-full shadow-[0_0_10px_#3b82f6]" />}
                                 </div>
                             </div>
-                            <div className="hidden md:block w-20 h-20 rounded-full border-[5px] border-zinc-700 shadow-inner bg-neutral-800 relative overflow-hidden shrink-0">
-                                <div className="absolute inset-0 opacity-80" style={{ backgroundImage: 'radial-gradient(#000 30%, transparent 31%)', backgroundSize: '4px 4px' }} />
+
+                            {/* Right High-Output Speaker Grille */}
+                            <div className="hidden md:flex w-24 h-24 rounded-full border-[6px] border-neutral-800 shadow-[inset_0_4px_12px_rgba(0,0,0,0.9),0_4px_8px_rgba(0,0,0,0.5)] bg-neutral-950 relative overflow-hidden shrink-0 items-center justify-center">
+                                {/* Woofer Cone with Bass Pulsing Vibration */}
+                                <motion.div
+                                    animate={isPlaying ? { scale: [1, 1.03, 0.98, 1.025, 1] } : {}}
+                                    transition={{ repeat: Infinity, duration: 0.55, ease: "easeInOut" }}
+                                    className="w-18 h-18 rounded-full bg-gradient-to-tr from-neutral-900 via-neutral-800 to-neutral-700 border-2 border-neutral-800 flex items-center justify-center shadow-inner"
+                                >
+                                    <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-neutral-700 via-neutral-500 to-neutral-300 border border-neutral-600 shadow-md" />
+                                </motion.div>
+                                <div className="absolute inset-0 opacity-75 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#000 35%, transparent 36%)', backgroundSize: '4px 4px' }} />
+                                <div className="absolute inset-0 rounded-full border border-neutral-700/60 pointer-events-none" />
                             </div>
                         </div>
 
-                        <div className="bg-neutral-800 rounded-lg p-2 border-t-2 border-white/10 flex flex-col gap-2">
+                        {/* Lower Controls & Transport Section */}
+                        <div className="bg-neutral-900 rounded-xl p-2.5 border border-neutral-800 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] flex flex-col gap-2.5">
+                            {/* Tape Progress Track */}
                             <div
-                                className="relative w-full h-4 flex items-center px-1 cursor-pointer overflow-hidden rounded-full"
+                                className="relative w-full h-4 flex items-center px-1 cursor-pointer overflow-hidden rounded-full bg-neutral-950 border border-neutral-800 shadow-inner"
                                 onClick={(e) => {
                                     const rect = e.currentTarget.getBoundingClientRect();
                                     const p = (e.clientX - rect.left) / rect.width;
                                     seek(Math.min(Math.max(p, 0), 1));
                                 }}
                             >
-                                <div className="absolute w-full h-1.5 bg-black rounded-full shadow-inner" />
-                                <div className="absolute h-1.5 bg-blue-500 rounded-l-full" style={{ width: `${safeProgress * 100}%` }} />
+                                <div className="absolute w-full h-1.5 bg-neutral-950 rounded-full shadow-inner" />
+                                <div className="absolute h-1.5 bg-gradient-to-r from-blue-600 to-blue-400 rounded-l-full shadow-[0_0_6px_#3b82f6]" style={{ width: `${safeProgress * 100}%` }} />
+                                <div
+                                    className="absolute top-1/2 -translate-y-1/2 w-2 h-3.5 bg-white rounded-sm shadow-md border border-neutral-400 pointer-events-none"
+                                    style={{ left: `calc(${safeProgress * 100}% - 4px)` }}
+                                />
                             </div>
+
+                            {/* Transport & Control Buttons */}
                             <div className="flex justify-between items-center px-1">
+                                {/* Secondary Function Buttons */}
                                 <div className="flex gap-1.5">
                                     <button
+                                        type="button"
                                         onClick={() => { playClick(); setShuffle(!shuffle); }}
-                                        className={`w-8 h-8 rounded-full border-b-2 border-black flex items-center justify-center shadow active:translate-y-0.5 ${shuffle ? 'bg-blue-500 text-white' : 'bg-zinc-700 text-zinc-400 hover:text-white'}`}
+                                        className={clsx(
+                                            "w-8 h-8 rounded-full border-b-2 border-black flex items-center justify-center shadow-md active:translate-y-0.5 transition-all",
+                                            shuffle ? 'bg-blue-500 text-white shadow-[0_0_8px_rgba(59,130,246,0.6)]' : 'bg-neutral-800 text-neutral-400 hover:text-white border border-neutral-700'
+                                        )}
                                         title={shuffle ? 'Shuffle: ON' : 'Shuffle: OFF'}
-                                    ><Shuffle size={14} /></button>
+                                    >
+                                        <Shuffle size={13} />
+                                    </button>
                                     <button
+                                        type="button"
                                         onClick={() => { playClick(); setRepeat(repeat === 'off' ? 'all' : repeat === 'all' ? 'one' : 'off'); }}
-                                        className={`w-8 h-8 rounded-full border-b-2 border-black flex items-center justify-center shadow active:translate-y-0.5 ${repeat !== 'off' ? 'bg-blue-500 text-white' : 'bg-zinc-700 text-zinc-400 hover:text-white'}`}
+                                        className={clsx(
+                                            "relative w-8 h-8 rounded-full border-b-2 border-black flex items-center justify-center shadow-md active:translate-y-0.5 transition-all",
+                                            repeat !== 'off' ? 'bg-blue-500 text-white shadow-[0_0_8px_rgba(59,130,246,0.6)]' : 'bg-neutral-800 text-neutral-400 hover:text-white border border-neutral-700'
+                                        )}
                                         title={`Repeat: ${repeat.toUpperCase()}`}
-                                    ><Repeat size={14} />{repeat === 'one' && <span className="absolute text-[8px] font-bold">1</span>}</button>
+                                    >
+                                        <Repeat size={13} />
+                                        {repeat === 'one' && <span className="absolute -top-1 -right-1 text-[7px] font-black bg-blue-400 text-neutral-950 rounded-full w-3 h-3 flex items-center justify-center">1</span>}
+                                    </button>
                                     <button
+                                        type="button"
                                         onClick={() => { playClick(); toggleLyrics(); }}
-                                        className={`w-8 h-8 rounded-full border-b-2 border-black flex items-center justify-center shadow active:translate-y-0.5 ${showLyrics ? 'bg-blue-500 text-white' : 'bg-zinc-700 text-zinc-400 hover:text-white'}`}
+                                        className={clsx(
+                                            "w-8 h-8 rounded-full border-b-2 border-black flex items-center justify-center shadow-md active:translate-y-0.5 transition-all",
+                                            showLyrics ? 'bg-blue-500 text-white shadow-[0_0_8px_rgba(59,130,246,0.6)]' : 'bg-neutral-800 text-neutral-400 hover:text-white border border-neutral-700'
+                                        )}
                                         title="Lyrics"
-                                    ><Mic2 size={14} /></button>
+                                    >
+                                        <Mic2 size={13} />
+                                    </button>
                                     <button
+                                        type="button"
                                         onClick={() => { playClick(); toggleEq(); }}
-                                        className={`w-8 h-8 rounded-full border-b-2 border-black flex items-center justify-center shadow active:translate-y-0.5 ${showEq ? 'bg-blue-500 text-white' : 'bg-zinc-700 text-zinc-400 hover:text-white'}`}
+                                        className={clsx(
+                                            "w-8 h-8 rounded-full border-b-2 border-black flex items-center justify-center shadow-md active:translate-y-0.5 transition-all",
+                                            showEq ? 'bg-blue-500 text-white shadow-[0_0_8px_rgba(59,130,246,0.6)]' : 'bg-neutral-800 text-neutral-400 hover:text-white border border-neutral-700'
+                                        )}
                                         title="Equalizer"
-                                    ><SlidersHorizontal size={14} /></button>
+                                    >
+                                        <SlidersHorizontal size={13} />
+                                    </button>
                                 </div>
+
+                                {/* Primary Transport Buttons (Prev / Play / Next) */}
                                 <div className="flex gap-2 items-center">
-                                    <button onClick={() => { playClick(); prev(); }} className="w-10 h-10 rounded bg-zinc-600 border-b-4 border-zinc-900 text-white flex items-center justify-center shadow active:translate-y-1 hover:bg-zinc-500"><SkipBack size={18} className="fill-current" /></button>
-                                    <button onClick={() => { playClick(); togglePlay(); }} className="w-14 h-14 rounded-full bg-blue-500 border-b-[5px] border-blue-900 text-white flex items-center justify-center shadow-lg active:translate-y-[5px] hover:bg-blue-400">{isPlaying ? <Pause size={24} className="fill-current" /> : <Play size={24} className="fill-current pl-0.5" />}</button>
-                                    <button onClick={() => { playClick(); next(); }} className="w-10 h-10 rounded bg-zinc-600 border-b-4 border-zinc-900 text-white flex items-center justify-center shadow active:translate-y-1 hover:bg-zinc-500"><SkipForward size={18} className="fill-current" /></button>
+                                    <button
+                                        type="button"
+                                        onClick={() => { playClick(); prev(); }}
+                                        className="w-10 h-10 rounded-lg bg-gradient-to-b from-neutral-600 via-neutral-700 to-neutral-800 border-b-4 border-neutral-950 text-white flex items-center justify-center shadow-md active:translate-y-1 hover:brightness-110"
+                                    >
+                                        <SkipBack size={18} className="fill-current" />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => { playClick(); togglePlay(); }}
+                                        className="w-14 h-14 rounded-full bg-gradient-to-b from-blue-400 via-blue-500 to-blue-700 border-b-[5px] border-blue-950 text-white flex items-center justify-center shadow-xl active:translate-y-[5px] hover:brightness-110"
+                                    >
+                                        {isPlaying ? <Pause size={24} className="fill-current" /> : <Play size={24} className="fill-current pl-0.5" />}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => { playClick(); next(); }}
+                                        className="w-10 h-10 rounded-lg bg-gradient-to-b from-neutral-600 via-neutral-700 to-neutral-800 border-b-4 border-neutral-950 text-white flex items-center justify-center shadow-md active:translate-y-1 hover:brightness-110"
+                                    >
+                                        <SkipForward size={18} className="fill-current" />
+                                    </button>
                                 </div>
+
+                                {/* Tactile Volume Rotary Dial */}
                                 <div className="hidden md:flex flex-col items-center gap-0.5 relative">
-                                    <div className="w-10 h-10 rounded-full bg-zinc-700 border-2 border-black shadow-lg relative flex items-center justify-center" style={{ transform: `rotate(${volume * 270 - 135}deg)` }}><div className="w-0.5 h-4 bg-white absolute -top-0 rounded" /></div>
-                                    <span className="text-[8px] font-bold uppercase text-zinc-500">Vol</span>
-                                    <input type="range" min="0" max="1" step="0.05" value={volume} onChange={(e) => setVolume(parseFloat(e.target.value))} className="absolute inset-0 opacity-0 cursor-pointer" />
+                                    <div
+                                        className="w-10 h-10 rounded-full bg-gradient-to-tr from-neutral-800 via-neutral-700 to-neutral-600 border-2 border-black shadow-[0_4px_8px_rgba(0,0,0,0.6)] relative flex items-center justify-center cursor-pointer transition-transform"
+                                        style={{ transform: `rotate(${volume * 270 - 135}deg)` }}
+                                    >
+                                        <div className="w-1 h-3 bg-amber-400 absolute top-1 rounded-full shadow-[0_0_4px_#f59e0b]" />
+                                    </div>
+                                    <span className="text-[7.5px] font-mono font-bold uppercase text-neutral-400">VOL</span>
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="1"
+                                        step="0.05"
+                                        value={volume}
+                                        onChange={(e) => setVolume(parseFloat(e.target.value))}
+                                        className="absolute inset-0 opacity-0 cursor-pointer"
+                                    />
                                 </div>
+
+                                {/* Eject Button */}
                                 {isLoaded && (
                                     <button
-                                        onClick={() => { playClick(); loadMix(""); }} // Safe Call
-                                        className="w-8 h-8 rounded bg-red-900/80 border-b-4 border-black text-white/70 flex items-center justify-center shadow active:translate-y-1 hover:bg-red-800 hover:text-white ml-2"
+                                        type="button"
+                                        onClick={() => { playClick(); loadMix(""); }}
+                                        className="w-8 h-8 rounded bg-gradient-to-b from-red-800 to-red-950 border-b-4 border-black text-white/80 flex items-center justify-center shadow-md active:translate-y-1 hover:brightness-110 ml-2"
                                         title="Eject Tape"
-                                    ><LogOut size={14} /></button>
+                                    >
+                                        <LogOut size={13} />
+                                    </button>
                                 )}
                             </div>
                         </div>
-                        <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 font-black italic text-neutral-700/20 text-xs tracking-widest uppercase">Sport Edition</span>
+
+                        {/* Molded Sports Chassis Emblem */}
+                        <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 font-black italic text-neutral-800/30 text-xs tracking-widest uppercase">
+                            SHOCK WAVE SPORT SERIES 9000
+                        </span>
                     </div>
                 </div>
             </div>

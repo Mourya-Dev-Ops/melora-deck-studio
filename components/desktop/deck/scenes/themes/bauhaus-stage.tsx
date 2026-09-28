@@ -4,16 +4,17 @@ import { useRef, useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence, useMotionValue } from "framer-motion";
 import { clsx } from "clsx";
 import { Play, Pause, SkipBack, SkipForward, Volume2, LogOut, Share2, Palette, Settings, Plus, Camera, Search, Pencil, Shuffle, Repeat } from "lucide-react";
-import { ThemeKey, THEMES } from "@/components/ui/desktop-player";
+import { ThemeKey } from "@/components/ui/desktop-player";
 import { useAudio } from "@/hooks/use-audio";
+import { decodeHtml } from "@/lib/utils";
 import { usePlayback, useLibrary, Mix } from "@/components/providers/playback-context";
 import { LyricsView } from "@/components/ui/lyrics-view";
 import { EqualizerView } from "@/components/ui/equalizer-view";
-import { Mic2, SlidersHorizontal, ListMusic } from "lucide-react";
+import { Mic2, SlidersHorizontal, ListMusic, Disc3, CircleDot } from "lucide-react";
 import { TapeRackModal } from "@/components/desktop/deck/modals/TapeRackModal";
+import { Visualizer } from "@/components/ui/visualizer";
 import { QualityBadge } from "@/components/shared/QualityBadge";
 import { useAudioProgress } from "@/hooks/use-audio-progress";
-
 
 export interface Position { x: number; y: number; rotation: number; }
 
@@ -21,25 +22,22 @@ interface BauhausStageProps {
     currentTheme: ThemeKey;
     onThemeChange: () => void;
     onSelectTheme?: (theme: ThemeKey) => void;
-    // onSwitchToMobile prop removed
     onOpenSettings?: () => void;
     onEditMix?: (mix: Mix) => void;
     onOpenSearch?: (mixId: string) => void;
     onCreateMix?: () => void;
     onCinemaMode?: () => void;
     onOpenThemeSelector?: () => void;
-    onSnapshotMix?: (mix: any) => void;
+    onSnapshotMix?: (mix: Mix) => void;
     onShowQueue?: () => void;
-    onShareMix?: (mix: any) => void;
+    onShareMix?: (mix: Mix) => void;
 }
-
 
 // Extracted Draggable Card
 function DraggableMixCard({
     mix,
     position,
     isActive,
-    containerRef,
     playerRef,
     onDragEnd,
     onEditMix,
@@ -70,11 +68,22 @@ function DraggableMixCard({
     const y = useMotionValue(position.y);
     const [isFailed, setIsFailed] = useState(false);
 
-    // Sync if parent updates
     useEffect(() => {
         x.set(position.x);
         y.set(position.y);
     }, [position.x, position.y, x, y]);
+
+    // Deterministic Bauhaus Color Mapping: Strict Theme Palette
+    const colorScheme = useMemo(() => {
+        const schemes = [
+            { bg: "bg-[#d62828]", text: "text-white", accent: "bg-[#003049]", border: "border-[#d62828]", tag: "ROT // A" },
+            { bg: "bg-[#003566]", text: "text-white", accent: "bg-[#ffd60a]", border: "border-[#003566]", tag: "BLAU // B" },
+            { bg: "bg-[#ffb703]", text: "text-[#121212]", accent: "bg-[#d62828]", border: "border-[#ffb703]", tag: "GELB // C" }
+        ];
+        let hash = 0;
+        for (let i = 0; i < mix.id.length; i++) hash = mix.id.charCodeAt(i) + ((hash << 5) - hash);
+        return schemes[Math.abs(hash) % schemes.length];
+    }, [mix.id]);
 
     return (
         <motion.div
@@ -83,15 +92,17 @@ function DraggableMixCard({
             dragMomentum={false}
             dragElastic={0.1}
             whileDrag={{ scale: 1.05, zIndex: 100, rotate: 0 }}
-            whileHover={{ scale: 1.02, zIndex: 50 }}
+            whileHover={{ scale: 1.03, zIndex: 50 }}
             animate={isFailed ? {
                 x: [x.get(), x.get() - 8, x.get() + 8, x.get() - 8, x.get() + 8, x.get() - 4, x.get() + 4, x.get()]
             } : undefined}
             transition={isFailed ? { duration: 0.4 } : undefined}
-            className={clsx("absolute top-0 left-0 cursor-grab active:cursor-grabbing w-[200px] group", isActive && "opacity-50 pointer-events-none grayscale")}
-            onDragEnd={(e, info) => {
+            className={clsx(
+                "absolute top-0 left-0 cursor-grab active:cursor-grabbing w-[210px] group select-none",
+                isActive && "opacity-45 pointer-events-none grayscale"
+            )}
+            onDragEnd={(_e, info) => {
                 let droppedOnPlayer = false;
-                // Check drop on player
                 if (playerRef.current) {
                     const rect = playerRef.current.getBoundingClientRect();
                     const { x: dropX, y: dropY } = info.point;
@@ -109,75 +120,113 @@ function DraggableMixCard({
                         setIsFailed(false);
                     }, 500);
                 }
-                // Persist Position
                 onDragEnd(mix.id, { x: x.get(), y: y.get(), rotation: position.rotation });
             }}
             onClick={(e) => e.stopPropagation()}
         >
-            {/* Card Content - Keeping existing design */}
+            {/* Bauhaus Designer Cassette Shell */}
             <div
                 id={`mix-card-${mix.id}`}
                 className={clsx(
-                    "relative p-3 border-2 transition-all transform aspect-[3/2] flex flex-col justify-between",
-                    isFailed
-                        ? "border-red-600 ring-4 ring-red-600/50 shadow-[0_0_20px_rgba(220,38,38,0.8)]"
-                        : "border-[#1a1a1a] shadow-[6px_6px_0px_0px_#1a1a1a]",
-                    // Bauhaus Color Mapping: Strict Theme-Controlled Colors (Ignoring mix.color)
-                    (() => {
-                        // Deterministic Hash based on Mix ID - Theme decides the color, not the playlist
-                        const primaryOptions = ['red', 'blue', 'yellow'];
-                        let hash = 0;
-                        for (let i = 0; i < mix.id.length; i++) hash = mix.id.charCodeAt(i) + ((hash << 5) - hash);
-                        const effectiveColor = primaryOptions[Math.abs(hash) % primaryOptions.length];
-
-                        return effectiveColor === 'red' ? "bg-red-600" :
-                            effectiveColor === 'blue' ? "bg-blue-600" :
-                                "bg-yellow-400";
-                    })()
+                    "relative p-3 rounded-md transition-all aspect-[1.55/1] flex flex-col justify-between overflow-hidden",
+                    "border-2 border-[#121212] shadow-[6px_6px_0px_0px_#121212]",
+                    colorScheme.bg,
+                    isFailed && "border-red-600 ring-4 ring-red-600/50"
                 )}
             >
-                {/* Action Buttons */}
-                <div className="absolute -top-3 -right-3 flex flex-row gap-1 z-30 opacity-0 group-hover:opacity-100 transition-opacity bg-white border-2 border-black p-1 shadow-lg pointer-events-auto">
-                    <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); onEditMix?.(mix); }} className="p-1 bg-white border border-black hover:bg-yellow-300"><Pencil size={10} /></button>
-                    <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); onSnapshotMix?.(mix); }} className="p-1 bg-white border border-black hover:bg-yellow-300"><Camera size={10} /></button>
-                    <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); onShareMix?.(mix); }} className="p-1 bg-white border border-black hover:bg-yellow-300"><Share2 size={10} /></button>
-                    <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); onOpenSearch?.(mix.id); }} className="p-1 bg-white border border-black hover:bg-yellow-300"><Plus size={10} /></button>
+                {/* Micro corner screws */}
+                <div className="absolute top-1.5 left-1.5 size-1.5 rounded-full border border-black/40 bg-white/40 flex items-center justify-center"><div className="w-1 h-[0.5px] bg-black/60" /></div>
+                <div className="absolute top-1.5 right-1.5 size-1.5 rounded-full border border-black/40 bg-white/40 flex items-center justify-center"><div className="w-1 h-[0.5px] -rotate-45 bg-black/60" /></div>
+                <div className="absolute bottom-1.5 left-1.5 size-1.5 rounded-full border border-black/40 bg-white/40 flex items-center justify-center"><div className="w-1 h-[0.5px] rotate-45 bg-black/60" /></div>
+                <div className="absolute bottom-1.5 right-1.5 size-1.5 rounded-full border border-black/40 bg-white/40 flex items-center justify-center"><div className="w-1 h-[0.5px] -rotate-45 bg-black/60" /></div>
+
+                {/* Action Buttons Floating On Hover */}
+                <div className="absolute top-2 right-2 flex flex-row gap-1 z-30 opacity-0 group-hover:opacity-100 transition-opacity bg-white border-2 border-black p-1 shadow-md pointer-events-auto rounded">
+                    <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); onEditMix?.(mix); }} className="p-1 hover:bg-[#ffb703] transition-colors"><Pencil size={10} className="text-black" /></button>
+                    <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); onSnapshotMix?.(mix); }} className="p-1 hover:bg-[#ffb703] transition-colors"><Camera size={10} className="text-black" /></button>
+                    <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); onShareMix?.(mix); }} className="p-1 hover:bg-[#ffb703] transition-colors"><Share2 size={10} className="text-black" /></button>
+                    <button type="button" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); onOpenSearch?.(mix.id); }} className="p-1 hover:bg-[#ffb703] transition-colors"><Plus size={10} className="text-black" /></button>
                 </div>
 
-                {/* Tape Label */}
-                <div className={clsx("flex justify-between items-start text-[#1a1a1a]")}>
-                    <span className="text-xl font-black">A</span>
-                    <div className="flex gap-1">
-                        {isActive && <div className="animate-pulse w-2 h-2 bg-blue-600 rounded-full"></div>}
+                {/* Tape Header */}
+                <div className="flex justify-between items-center z-10 px-0.5">
+                    <span className="font-mono text-[9px] font-black tracking-widest uppercase bg-black text-white px-1.5 py-0.5 rounded-xs">
+                        {colorScheme.tag}
+                    </span>
+                    <span className="font-mono text-[8px] font-bold uppercase tracking-wider opacity-70">
+                        BAUHAUS 60 MIN
+                    </span>
+                </div>
+
+                {/* Archival Label */}
+                <div className="bg-[#fafaf7] relative px-2 py-1.5 border-2 border-[#121212] shadow-xs mx-0.5 z-10 rounded-xs">
+                    <p className="font-mono text-center text-xs font-black text-[#121212] tracking-tight truncate uppercase">
+                        {mix.title}
+                    </p>
+                    <div className="w-full h-0.5 bg-[#121212]/20 my-0.5" />
+                    <div className="flex justify-between text-[7px] font-mono text-black/50 tracking-wider">
+                        <span>STUDIO NORM</span>
+                        <span>{mix.songs.length} WERKE</span>
                     </div>
                 </div>
 
-                <div className={clsx("bg-white relative p-2 border-2 border-[#1a1a1a] shadow-sm mx-1 transform -rotate-1")}>
-                    <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-3 h-1.5 bg-black opacity-10 rounded-b"></div>
-                    <p className="font-mono text-center text-xs font-bold text-[#1a1a1a] tracking-tight truncate uppercase">{mix.title}</p>
-                    <div className="w-full h-0.5 bg-[#1a1a1a]/20 my-1"></div>
-                </div>
-
-                <div className="flex justify-between items-center mt-2 px-1">
+                {/* Spools Cutout */}
+                <div className="flex justify-between items-center bg-[#121212]/15 rounded px-2 py-1 border border-black/20 z-10">
                     <div className="flex gap-2 items-center">
-                        <div className="w-6 h-6 rounded-full border-2 border-[#1a1a1a] flex items-center justify-center"><div className="w-full h-0.5 bg-[#1a1a1a]"></div></div>
-                        <div className="w-6 h-6 rounded-full border-2 border-[#1a1a1a] flex items-center justify-center"><div className="w-full h-0.5 bg-[#1a1a1a]"></div></div>
+                        <div className="size-5 rounded-full border-2 border-[#121212] bg-white flex items-center justify-center">
+                            <div className="w-full h-0.5 bg-[#121212]" />
+                        </div>
+                        <div className="w-10 h-1 bg-[#121212]/30 rounded-full" />
+                        <div className="size-5 rounded-full border-2 border-[#121212] bg-white flex items-center justify-center">
+                            <div className="w-full h-0.5 bg-[#121212]" />
+                        </div>
                     </div>
-                    <span className="bg-[#1a1a1a] text-white px-2 py-0.5 text-[9px] font-bold">{mix.songs.length}</span>
+                    <span className="bg-[#121212] text-white px-1.5 py-0.5 text-[8px] font-mono font-bold rounded-xs">
+                        {mix.songs.length}
+                    </span>
                 </div>
             </div>
         </motion.div>
     );
 }
 
-export function BauhausStage({ currentTheme, onThemeChange, onSelectTheme, onOpenSettings, onEditMix, onOpenSearch, onCreateMix, onCinemaMode, onOpenThemeSelector, onShowQueue, onShareMix, onSnapshotMix }: BauhausStageProps) {
+export function BauhausStage({
+    onOpenSettings,
+    onEditMix,
+    onOpenSearch,
+    onCreateMix,
+    onCinemaMode,
+    onOpenThemeSelector,
+    onShareMix,
+    onSnapshotMix
+}: BauhausStageProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const playerRef = useRef<HTMLDivElement>(null!);
 
-    // State Refactor
     const [positions, setPositions] = useState<Record<string, Position>>({});
 
-    const { activeMixId, isPlaying, currentSong, volume, duration, loadMix, togglePlay, next, prev, seek, setVolume, isLoaded, eq, activeQuality, shuffle, setShuffle, repeat, setRepeat, play, unlockAudio } = usePlayback();
+    const {
+        activeMixId,
+        isPlaying,
+        currentSong,
+        volume,
+        duration,
+        loadMix,
+        togglePlay,
+        next,
+        prev,
+        seek,
+        setVolume,
+        isLoaded,
+        eq,
+        activeQuality,
+        shuffle,
+        setShuffle,
+        repeat,
+        setRepeat,
+        play,
+        unlockAudio
+    } = usePlayback();
     const { mixes } = useLibrary();
     const { progress } = useAudioProgress();
 
@@ -186,7 +235,6 @@ export function BauhausStage({ currentTheme, onThemeChange, onSelectTheme, onOpe
     const [showEq, setShowEq] = useState(false);
     const [isRackOpen, setIsRackOpen] = useState(false);
 
-    // Memoize activeMix
     const activeMix = useMemo(() => mixes.find(m => m.id === activeMixId) || null, [mixes, activeMixId]);
 
     // Initialize Grid Positions
@@ -194,15 +242,15 @@ export function BauhausStage({ currentTheme, onThemeChange, onSelectTheme, onOpe
         setPositions(prev => {
             const nextState = { ...prev };
             let hasChanges = false;
-            const cols = 3; // Grid columns
+            const cols = 3;
 
             mixes.forEach((mix, i) => {
                 if (!nextState[mix.id]) {
                     const col = i % cols;
                     const row = Math.floor(i / cols);
                     nextState[mix.id] = {
-                        x: 40 + (col * 220),
-                        y: 120 + (row * 160),
+                        x: 40 + (col * 230),
+                        y: 110 + (row * 160),
                         rotation: -2 + Math.random() * 4
                     };
                     hasChanges = true;
@@ -217,13 +265,12 @@ export function BauhausStage({ currentTheme, onThemeChange, onSelectTheme, onOpe
     };
 
     const formatTime = (seconds: number) => {
-        if (!seconds || isNaN(seconds)) return "0:00";
+        if (!seconds || isNaN(seconds)) return "00:00";
         const mins = Math.floor(seconds / 60);
         const secs = Math.floor(seconds % 60);
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     };
 
-    // Exclusive Toggles
     const toggleLyrics = () => {
         if (!showLyrics) setShowEq(false);
         setShowLyrics(!showLyrics);
@@ -234,45 +281,74 @@ export function BauhausStage({ currentTheme, onThemeChange, onSelectTheme, onOpe
         setShowEq(!showEq);
     };
 
-    // Safe Progress
     const safeProgress = Math.min(Math.max(progress || 0, 0), 1);
+    const leftTapeRadius = 14 + Math.sqrt(Math.max(0, 1 - safeProgress)) * 20;
+    const rightTapeRadius = 14 + Math.sqrt(Math.max(0, safeProgress)) * 20;
 
     return (
-        <div ref={containerRef} className="bg-[#f4f4f0] text-[#1a1a1a] h-screen flex flex-col font-sans overflow-hidden selection:bg-[#0052cc] selection:text-white relative">
-            {/* Bauhaus Grid Background */}
-            <div className="absolute inset-0 pointer-events-none opacity-40 z-0"
+        <div
+            ref={containerRef}
+            className="bg-[#f0ede6] text-[#121212] h-screen flex flex-col font-sans overflow-hidden selection:bg-[#003049] selection:text-white relative select-none"
+        >
+            {/* Precise Dieter Rams Bauhaus Architectural Grid */}
+            <div
+                className="absolute inset-0 pointer-events-none opacity-45 z-0"
                 style={{
-                    backgroundImage: `linear-gradient(#e5e5e5 1px, transparent 1px), linear-gradient(90deg, #e5e5e5 1px, transparent 1px)`,
-                    backgroundSize: '40px 40px'
+                    backgroundImage: `linear-gradient(#dedad0 1px, transparent 1px), linear-gradient(90deg, #dedad0 1px, transparent 1px)`,
+                    backgroundSize: '36px 36px'
                 }}
             />
 
             <div className="w-full h-full mx-auto p-0 relative z-10 flex flex-col">
                 {/* Header */}
-                <header className="w-full p-4 flex flex-col md:flex-row justify-between items-center bg-white border-b-4 border-[#1a1a1a] relative z-20 gap-4 shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] z-40">
-                    <div className="flex items-center gap-4 select-none">
-                        <h1 className="text-3xl font-['Pacifico'] tracking-tight">Melora Tunes</h1>
+                <header className="w-full px-6 py-4 flex flex-col md:flex-row justify-between items-center bg-[#fafaf7] border-b-4 border-[#121212] relative z-40 gap-4 shadow-[6px_6px_0px_0px_#121212]">
+                    <div className="flex items-center gap-3 select-none">
+                        <span className="w-4 h-4 bg-[#d62828] rounded-xs border-2 border-black" />
+                        <span className="w-4 h-4 bg-[#ffd60a] rounded-full border-2 border-black" />
+                        <span className="w-4 h-4 bg-[#003566] border-2 border-black" />
+                        <h1 className="text-2xl font-mono font-black tracking-tighter uppercase pl-2">
+                            BRAUN // BAUHAUS MODUL 4
+                        </h1>
                     </div>
-                    <div className="flex items-center gap-4 flex-wrap justify-center font-bold">
-                        <button onClick={onCinemaMode} className="hidden md:flex items-center gap-2 bg-[#0052cc] text-white px-4 py-2 uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-none transition-all border-2 border-[#1a1a1a] text-sm">
-                            <Camera size={14} /> Photo Mode
+
+                    <div className="flex items-center gap-3.5 flex-wrap justify-center font-mono font-bold text-xs">
+                        <button
+                            onClick={onCinemaMode}
+                            className="hidden md:flex items-center gap-2 bg-[#003566] text-white px-3.5 py-2 uppercase tracking-wider shadow-[3px_3px_0px_0px_#121212] hover:translate-y-0.5 hover:shadow-xs transition-all border-2 border-[#121212]"
+                        >
+                            <Camera size={13} /> Photo Mode
                         </button>
-                        <button onClick={() => onOpenSearch?.('')} className="hidden md:flex items-center gap-2 bg-white text-[#1a1a1a] px-4 py-2 uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-none transition-all border-2 border-[#1a1a1a] text-sm">
-                            <Search size={14} /> Search
+                        <button
+                            onClick={() => onOpenSearch?.('')}
+                            className="hidden md:flex items-center gap-2 bg-white text-[#121212] px-3.5 py-2 uppercase tracking-wider shadow-[3px_3px_0px_0px_#121212] hover:translate-y-0.5 hover:shadow-xs transition-all border-2 border-[#121212]"
+                        >
+                            <Search size={13} /> Search
                         </button>
-                        <button onClick={() => setIsRackOpen(true)} className="flex items-center gap-2 bg-white text-[#1a1a1a] border-2 border-[#1a1a1a] px-4 py-2 uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-none transition-all text-sm">
-                            <ListMusic size={14} /> Rack
+                        <button
+                            onClick={() => setIsRackOpen(true)}
+                            className="flex items-center gap-2 bg-white text-[#121212] border-2 border-[#121212] px-3.5 py-2 uppercase tracking-wider shadow-[3px_3px_0px_0px_#121212] hover:translate-y-0.5 hover:shadow-xs transition-all"
+                        >
+                            <ListMusic size={13} /> Rack
                         </button>
-                        <button onClick={onCreateMix} className="flex items-center gap-2 bg-[#ffcc00] text-[#1a1a1a] border-2 border-[#1a1a1a] px-4 py-2 uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-none transition-all text-sm">
-                            <Plus size={14} /> New Tape
+                        <button
+                            onClick={onCreateMix}
+                            className="flex items-center gap-2 bg-[#ffd60a] text-[#121212] border-2 border-[#121212] px-3.5 py-2 uppercase tracking-wider shadow-[3px_3px_0px_0px_#121212] hover:translate-y-0.5 hover:shadow-xs transition-all"
+                        >
+                            <Plus size={13} /> New Tape
                         </button>
-                        <div className="relative">
-                            <button onClick={() => onOpenThemeSelector?.()} className="p-3 bg-white border-2 border-[#1a1a1a] hover:bg-gray-100 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
-                                <Palette size={20} />
-                            </button>
-                        </div>
-                        <button onClick={onOpenSettings} className="p-3 bg-white border-2 border-[#1a1a1a] hover:bg-gray-100 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
-                            <Settings size={20} />
+                        <button
+                            onClick={() => onOpenThemeSelector?.()}
+                            className="p-2.5 bg-white border-2 border-[#121212] hover:bg-gray-100 shadow-[3px_3px_0px_0px_#121212] transition-all"
+                            title="Theme Palette"
+                        >
+                            <Palette size={16} />
+                        </button>
+                        <button
+                            onClick={onOpenSettings}
+                            className="p-2.5 bg-white border-2 border-[#121212] hover:bg-gray-100 shadow-[3px_3px_0px_0px_#121212] transition-all"
+                            title="Settings"
+                        >
+                            <Settings size={16} />
                         </button>
                     </div>
                 </header>
@@ -305,86 +381,153 @@ export function BauhausStage({ currentTheme, onThemeChange, onSelectTheme, onOpe
                             );
                         })}
 
-                    {/* Right Column: Player (Fixed Position but Draggable) */}
+                    {/* Right Column: Bauhaus Master Deck (Dieter Rams / Braun Aesthetic) */}
                     <motion.section
                         ref={playerRef}
                         id="stereo-player"
                         drag
                         dragMomentum={true}
-                        dragElastic={0.2}
+                        dragElastic={0.15}
                         dragConstraints={containerRef}
                         whileDrag={{ scale: 1.02, zIndex: 100 }}
-                        className="absolute right-6 top-6 w-full max-w-[340px] bg-white border-4 border-[#1a1a1a] p-4 flex flex-col gap-2 shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] z-30 cursor-move"
+                        className="absolute right-8 top-6 w-full max-w-[370px] bg-[#fafaf7] border-4 border-[#121212] p-5 flex flex-col gap-3.5 shadow-[12px_12px_0px_0px_#121212] z-30 cursor-move rounded-md"
                     >
                         {/* Screws */}
-                        <div className="absolute top-2 left-2 text-gray-300 font-mono text-xl">+</div>
-                        <div className="absolute top-2 right-2 text-gray-300 font-mono text-xl">+</div>
-                        <div className="absolute bottom-2 left-2 text-gray-300 font-mono text-xl">+</div>
-                        <div className="absolute bottom-2 right-2 text-gray-300 font-mono text-xl">+</div>
+                        <div className="absolute top-2 left-2 text-black/30 font-mono text-xs">+</div>
+                        <div className="absolute top-2 right-2 text-black/30 font-mono text-xs">+</div>
+                        <div className="absolute bottom-2 left-2 text-black/30 font-mono text-xs">+</div>
+                        <div className="absolute bottom-2 right-2 text-black/30 font-mono text-xs">+</div>
 
-                        <div className="text-center space-y-2 mt-2">
-                            <h3 className="text-3xl font-black uppercase tracking-tighter text-[#1a1a1a]">Stereo Player</h3>
-                            <div className="w-16 h-1 bg-[#ff3333] mx-auto"></div>
-                            <p className="text-[10px] font-mono text-gray-400 uppercase tracking-[0.3em]">Auto Reverse System</p>
+                        {/* Deck Branding */}
+                        <div className="flex items-center justify-between border-b-2 border-[#121212] pb-2">
+                            <div>
+                                <h3 className="text-xl font-mono font-black uppercase tracking-tight text-[#121212]">
+                                    BRAUN TG 60
+                                </h3>
+                                <p className="text-[9px] font-mono text-black/60 uppercase tracking-[0.25em]">
+                                    DESIGN DIETER RAMS // 1965
+                                </p>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <span className={clsx("size-2.5 rounded-full border border-black", isPlaying ? "bg-[#d62828] animate-pulse" : "bg-black/20")} />
+                                <span className="font-mono text-[9px] font-bold uppercase tracking-wider">
+                                    {isPlaying ? "RUN" : "STOP"}
+                                </span>
+                            </div>
                         </div>
 
-                        {/* Player Screen */}
-                        <div className="bg-[#1a1a1a] p-0 rounded-sm border-4 border-gray-200 h-40 flex flex-col items-center justify-center relative shadow-inner overflow-hidden group select-none">
-                            <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `url("https://www.transparenttextures.com/patterns/carbon-fibre.png")` }}></div>
+                        {/* Cassette Bay Window with Functional Geometric Reels */}
+                        <div className="bg-[#121212] rounded border-2 border-[#121212] h-44 flex flex-col items-center justify-center relative shadow-inner overflow-hidden select-none p-3">
+                            {/* Smoked Acrylic Glass Glare */}
+                            <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.08] via-transparent to-transparent pointer-events-none z-20" />
 
                             {isLoaded && activeMix ? (
-                                <motion.div layoutId={activeMix.id} className="transform scale-[0.95] origin-center w-full flex justify-center items-center pointer-events-none">
-                                    <div className="relative w-full">
-                                        <div className={clsx(
-                                            "relative p-3 border-2 border-[#1a1a1a] aspect-[3/2] flex flex-col justify-between shadow-[8px_8px_0px_0px_#1a1a1a] bg-[#0052cc]"
-                                        )}>
-                                            <div className={clsx("flex justify-between items-start text-white")}>
-                                                <span className="text-2xl font-black">A</span>
-                                                <div className="flex gap-1">
-                                                    <div className="animate-pulse w-2 h-2 bg-white rounded-full"></div>
-                                                </div>
-                                            </div>
-                                            <div className={clsx("bg-white relative p-2 border-2 border-[#1a1a1a] shadow-sm mx-1 transform -rotate-1")}>
-                                                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-3 h-1.5 bg-black opacity-10 rounded-b"></div>
-                                                <p className="font-mono text-center text-sm font-bold text-[#1a1a1a] tracking-tight truncate uppercase">{activeMix.title}</p>
-                                                <div className="w-full h-0.5 bg-[#1a1a1a]/20 my-1"></div>
-                                                <p className="text-[8px] text-center text-[#1a1a1a]/60 uppercase tracking-[0.2em]">TFI High Fidelity</p>
-                                            </div>
-                                            <div className="flex justify-between items-center mt-4 px-2">
-                                                <div className="flex gap-6 items-center">
-                                                    <motion.div animate={isPlaying ? { rotate: 360 } : {}} transition={{ repeat: Infinity, duration: 2, ease: "linear" }} className="w-10 h-10 rounded-full border-4 border-white flex items-center justify-center"><div className="w-full h-0.5 bg-white"></div></motion.div>
-                                                    <motion.div animate={isPlaying ? { rotate: 360 } : {}} transition={{ repeat: Infinity, duration: 2, ease: "linear" }} className="w-10 h-10 rounded-full border-4 border-white flex items-center justify-center"><div className="w-full h-0.5 bg-white"></div></motion.div>
-                                                </div>
-                                                <span className="bg-[#1a1a1a] text-white px-3 py-1 text-xs font-bold border-2 border-white">{activeMix.songs.length} SONGS</span>
-                                            </div>
+                                <motion.div layoutId={activeMix.id} className="w-full h-full flex flex-col justify-between relative z-10">
+                                    {/* Cassette Top Banner */}
+                                    <div className="bg-white border border-black px-2.5 py-1 flex items-center justify-between shadow-xs">
+                                        <div className="flex items-center gap-2">
+                                            <span className="font-mono text-[9px] font-black bg-[#d62828] text-white px-1 rounded-xs">A</span>
+                                            <span className="font-mono text-xs font-black truncate max-w-[200px] text-[#121212]">
+                                                {currentSong ? decodeHtml(currentSong.name) : activeMix.title}
+                                            </span>
                                         </div>
+                                        <span className="font-mono text-[8px] font-bold text-black/50">CrO2</span>
+                                    </div>
+
+                                    {/* Mechanical Rotating Spools with dynamic tape rolls */}
+                                    <div className="flex items-center justify-between px-6 py-2 bg-black/60 rounded border border-white/10 my-auto">
+                                        {/* Left Reel */}
+                                        <div className="relative flex items-center justify-center">
+                                            <div
+                                                className="rounded-full absolute transition-all duration-300"
+                                                style={{
+                                                    width: `${leftTapeRadius * 2}px`,
+                                                    height: `${leftTapeRadius * 2}px`,
+                                                    background: "radial-gradient(circle, #3d2a1d 30%, #1a120c 90%)"
+                                                }}
+                                            />
+                                            <motion.div
+                                                animate={isPlaying ? { rotate: 360 } : {}}
+                                                transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
+                                                className="size-10 rounded-full border-2 border-white bg-[#222] flex items-center justify-center relative z-10"
+                                            >
+                                                <div className="w-full h-0.5 bg-white" />
+                                                <div className="size-2 rounded-full bg-white z-10" />
+                                            </motion.div>
+                                        </div>
+
+                                        {/* Center Optical Head Block */}
+                                        <div className="flex flex-col items-center justify-center">
+                                            <div className="w-12 h-1 bg-[#ffd60a] rounded-full mb-1" />
+                                            <span className="font-mono text-[7px] text-white/50 tracking-widest uppercase">STEREO HEAD</span>
+                                        </div>
+
+                                        {/* Right Reel */}
+                                        <div className="relative flex items-center justify-center">
+                                            <div
+                                                className="rounded-full absolute transition-all duration-300"
+                                                style={{
+                                                    width: `${rightTapeRadius * 2}px`,
+                                                    height: `${rightTapeRadius * 2}px`,
+                                                    background: "radial-gradient(circle, #3d2a1d 30%, #1a120c 90%)"
+                                                }}
+                                            />
+                                            <motion.div
+                                                animate={isPlaying ? { rotate: 360 } : {}}
+                                                transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
+                                                className="size-10 rounded-full border-2 border-white bg-[#222] flex items-center justify-center relative z-10"
+                                            >
+                                                <div className="w-full h-0.5 bg-white" />
+                                                <div className="size-2 rounded-full bg-white z-10" />
+                                            </motion.div>
+                                        </div>
+                                    </div>
+
+                                    {/* Bottom Information */}
+                                    <div className="flex items-center justify-between text-[8px] font-mono text-white/60 px-1">
+                                        <span>4 TRACK STEREO</span>
+                                        <span>DIN 45500 HI-FI</span>
                                     </div>
                                 </motion.div>
                             ) : (
-                                <div className="absolute text-gray-400 font-mono text-sm tracking-widest bg-black px-2 py-1 animate-pulse">NO CASSETTE</div>
+                                <div className="flex flex-col items-center justify-center gap-2 text-white/40">
+                                    <Disc3 size={28} className="animate-spin" style={{ animationDuration: "8s" }} />
+                                    <span className="font-mono text-xs font-bold tracking-widest uppercase">KEINE KASSETTE</span>
+                                </div>
                             )}
                         </div>
 
                         {/* Status Bar */}
-                        <div className="flex gap-4">
-                            <div className="flex-1 bg-[#d4d8cc] p-3 border-2 border-[#1a1a1a] shadow-inner font-mono flex justify-between items-center">
-                                <span className="text-[#1a1a1a] font-bold tracking-widest text-sm uppercase">STATUS: {isLoaded ? (isPlaying ? "PLAYING" : "PAUSED") : "EMPTY"}</span>
+                        <div className="flex gap-2">
+                            <div className="flex-1 bg-[#e8e6df] p-2.5 border-2 border-[#121212] font-mono flex justify-between items-center">
+                                <span className="text-[#121212] font-black tracking-wider text-xs uppercase truncate">
+                                    {isLoaded ? (currentSong ? decodeHtml(currentSong.name) : "BEREIT") : "LEER"}
+                                </span>
                                 {isLoaded && activeQuality && <QualityBadge quality={activeQuality} variant="mini" />}
                             </div>
-                            <div className="w-16 bg-[#1a1a1a] flex items-center justify-center border-2 border-[#1a1a1a]">
-                                <span className="font-black text-white text-xl">A</span>
+                            <div className="w-12 bg-[#121212] flex items-center justify-center border-2 border-[#121212]">
+                                <span className="font-black text-white text-base">A</span>
                             </div>
                         </div>
 
-                        {/* Progress */}
+                        {/* Integrated Visualizer */}
+                        <div className="w-full h-6 bg-[#e8e6df] border-2 border-[#121212] p-1 overflow-hidden">
+                            {isLoaded ? (
+                                <Visualizer isPlaying={isPlaying} accentColor="#003566" className="w-full h-full opacity-80" />
+                            ) : (
+                                <div className="w-full h-0.5 bg-black/20 my-auto" />
+                            )}
+                        </div>
+
+                        {/* Progress Bar with Dieter Rams High-Contrast Fader */}
                         <div className="space-y-1">
-                            <div className="flex justify-between font-mono text-[10px] text-gray-400 uppercase tracking-widest">
-                                <span>{formatTime(progress * duration)}</span>
-                                <span>Side A</span>
+                            <div className="flex justify-between font-mono text-[9px] text-black/60 font-bold uppercase tracking-wider">
+                                <span>{formatTime(safeProgress * duration)}</span>
+                                <span>BANDLÄNGE</span>
                                 <span>{formatTime(duration || 0)}</span>
                             </div>
                             <div
-                                className="h-6 bg-gray-100 w-full border-2 border-[#1a1a1a] relative group cursor-pointer"
+                                className="h-4 bg-[#e8e6df] w-full border-2 border-[#121212] relative cursor-pointer"
                                 onClick={(e) => {
                                     if (duration && isLoaded) {
                                         const rect = e.currentTarget.getBoundingClientRect();
@@ -394,68 +537,105 @@ export function BauhausStage({ currentTheme, onThemeChange, onSelectTheme, onOpe
                                 }}
                             >
                                 <motion.div
-                                    className="h-full bg-[#0052cc] relative"
+                                    className="h-full bg-[#003566] relative"
                                     style={{ width: `${safeProgress * 100}%` }}
                                 >
-                                    <div className="absolute right-0 top-0 bottom-0 w-1 bg-black/20"></div>
+                                    <div className="absolute right-0 top-0 bottom-0 w-2 bg-[#d62828] border-l border-black" />
                                 </motion.div>
                             </div>
                         </div>
 
-                        <hr className="border-gray-200 my-1" />
+                        {/* Mechanical Tactile Primary Buttons */}
+                        <div className="flex justify-between items-center pt-1">
+                            <button
+                                onClick={() => { playClick(); setShuffle(!shuffle); }}
+                                className={clsx(
+                                    "size-8 rounded-full border-2 border-[#121212] flex items-center justify-center transition-all shadow-[2px_2px_0px_0px_#121212] active:translate-y-0.5 active:shadow-none",
+                                    shuffle ? "bg-[#003566] text-white" : "bg-white hover:bg-gray-100"
+                                )}
+                                title={shuffle ? 'Shuffle: ON' : 'Shuffle: OFF'}
+                            >
+                                <Shuffle size={13} />
+                            </button>
 
-                        {/* Controls */}
-                        <div className="flex justify-center items-center gap-3 mb-2">
-                            <button onClick={() => { playClick(); setShuffle(!shuffle); }} className={`w-8 h-8 rounded-full border-2 border-[#1a1a1a] flex items-center justify-center transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-0.5 active:shadow-none ${shuffle ? 'bg-[#0052cc] text-white' : 'bg-white hover:bg-gray-100'}`} title={shuffle ? 'Shuffle: ON' : 'Shuffle: OFF'}>
-                                <Shuffle size={14} />
+                            <button
+                                onClick={() => { playClick(); prev(); }}
+                                className="size-9 rounded-full border-2 border-[#121212] bg-white flex items-center justify-center hover:bg-gray-100 transition-all shadow-[2px_2px_0px_0px_#121212] active:translate-y-0.5 active:shadow-none"
+                                title="Previous"
+                            >
+                                <SkipBack size={15} className="fill-current" />
                             </button>
-                            <button onClick={() => { playClick(); prev(); }} className="w-10 h-10 rounded-full border-2 border-[#1a1a1a] bg-white flex items-center justify-center hover:bg-gray-100 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-0.5 active:shadow-none">
-                                <SkipBack size={18} className="fill-current" />
+
+                            {/* Master Play Button: Iconic Cobalt Circle */}
+                            <button
+                                onClick={() => { playClick(); togglePlay(); }}
+                                className="size-13 bg-[#003566] text-white rounded-full border-3 border-[#121212] shadow-[3px_3px_0px_0px_#121212] hover:translate-y-0.5 hover:shadow-xs active:scale-95 transition-all flex items-center justify-center"
+                                title={isPlaying ? "Pause" : "Play"}
+                            >
+                                {isPlaying ? <Pause size={24} className="fill-current" /> : <Play size={24} className="fill-current ml-0.5" />}
                             </button>
-                            <button onClick={() => { playClick(); togglePlay(); }} className="w-14 h-14 bg-[#0052cc] text-white rounded-full border-4 border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-0.5 hover:shadow-none transition-all flex items-center justify-center">
-                                {isPlaying ? <Pause size={28} className="fill-current" /> : <Play size={28} className="fill-current ml-1" />}
+
+                            <button
+                                onClick={() => { playClick(); next(); }}
+                                className="size-9 rounded-full border-2 border-[#121212] bg-white flex items-center justify-center hover:bg-gray-100 transition-all shadow-[2px_2px_0px_0px_#121212] active:translate-y-0.5 active:shadow-none"
+                                title="Next"
+                            >
+                                <SkipForward size={15} className="fill-current" />
                             </button>
-                            <button onClick={() => { playClick(); next(); }} className="w-10 h-10 rounded-full border-2 border-[#1a1a1a] bg-white flex items-center justify-center hover:bg-gray-100 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-0.5 active:shadow-none">
-                                <SkipForward size={18} className="fill-current" />
-                            </button>
-                            <button onClick={() => { playClick(); setRepeat(repeat === 'off' ? 'all' : repeat === 'all' ? 'one' : 'off'); }} className={`w-8 h-8 rounded-full border-2 border-[#1a1a1a] flex items-center justify-center relative transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-0.5 active:shadow-none ${repeat !== 'off' ? 'bg-[#0052cc] text-white' : 'bg-white hover:bg-gray-100'}`} title={`Repeat: ${repeat.toUpperCase()}`}>
-                                <Repeat size={14} />{repeat === 'one' && <span className="absolute -top-1 -right-1 text-[8px] font-bold bg-white text-[#0052cc] rounded-full w-3 h-3 flex items-center justify-center border border-[#1a1a1a]">1</span>}
+
+                            <button
+                                onClick={() => { playClick(); setRepeat(repeat === 'off' ? 'all' : repeat === 'all' ? 'one' : 'off'); }}
+                                className={clsx(
+                                    "size-8 rounded-full border-2 border-[#121212] flex items-center justify-center relative transition-all shadow-[2px_2px_0px_0px_#121212] active:translate-y-0.5 active:shadow-none",
+                                    repeat !== 'off' ? "bg-[#003566] text-white" : "bg-white hover:bg-gray-100"
+                                )}
+                                title={`Repeat: ${repeat.toUpperCase()}`}
+                            >
+                                <Repeat size={13} />
+                                {repeat === 'one' && <span className="absolute -top-1 -right-1 text-[7px] font-bold bg-[#d62828] text-white rounded-full size-3 flex items-center justify-center border border-[#121212]">1</span>}
                             </button>
                         </div>
 
-                        <div className="flex items-center justify-between px-2 text-xs font-mono text-gray-500 font-bold">
-                            <button onClick={() => { playEject(); loadMix(""); }} className="flex flex-col items-center cursor-pointer hover:text-[#ff3333] transition-colors">
-                                <LogOut size={14} />
-                                <span className="mt-0.5 tracking-widest text-[9px] font-bold">EJECT</span>
+                        {/* Lower Controls & Volume Attenuator */}
+                        <div className="flex items-center justify-between pt-2 border-t-2 border-[#121212] text-xs font-mono font-bold">
+                            <button
+                                onClick={() => { playEject(); loadMix(""); }}
+                                className="flex items-center gap-1 hover:text-[#d62828] transition-colors"
+                            >
+                                <LogOut size={13} />
+                                <span className="tracking-widest text-[8px]">AUSWURF</span>
                             </button>
+
                             <button
                                 onClick={toggleLyrics}
-                                className={`flex flex-col items-center cursor-pointer transition-colors ${showLyrics ? 'text-[#0052cc]' : 'hover:text-[#0052cc]'}`}
+                                className={clsx("flex items-center gap-1 transition-colors", showLyrics ? "text-[#003566]" : "hover:text-[#003566]")}
                             >
-                                <Mic2 size={14} />
-                                <span className="mt-0.5 tracking-widest text-[9px] font-bold">LYRICS</span>
+                                <Mic2 size={13} />
+                                <span className="tracking-widest text-[8px]">TEXT</span>
                             </button>
+
                             <button
                                 onClick={toggleEq}
-                                className={`flex flex-col items-center cursor-pointer transition-colors ${showEq ? 'text-[#0052cc]' : 'hover:text-[#0052cc]'}`}
+                                className={clsx("flex items-center gap-1 transition-colors", showEq ? "text-[#003566]" : "hover:text-[#003566]")}
                             >
-                                <SlidersHorizontal size={14} />
-                                <span className="mt-0.5 tracking-widest text-[9px] font-bold">EQ</span>
+                                <SlidersHorizontal size={13} />
+                                <span className="tracking-widest text-[8px]">KLANG</span>
                             </button>
+
                             <div className="flex items-center gap-1.5">
-                                <span className="text-[9px] font-bold text-gray-500 font-mono tracking-widest uppercase shrink-0">VOL</span>
-                                <Volume2 size={14} className="text-gray-400" />
-                                <div className="h-1.5 w-16 bg-gray-200 rounded-full relative cursor-pointer border border-[#1a1a1a]"
+                                <Volume2 size={13} className="text-black/60" />
+                                <div
+                                    className="h-2.5 w-16 bg-[#e8e6df] rounded-full relative cursor-pointer border border-[#121212] overflow-hidden"
                                     onClick={(e) => {
                                         const rect = e.currentTarget.getBoundingClientRect();
                                         const p = (e.clientX - rect.left) / rect.width;
                                         setVolume(Math.min(Math.max(p, 0), 1));
-                                    }}>
-                                    <div className="absolute top-0 left-0 bottom-0 bg-[#ffcc00] rounded-full" style={{ width: `${volume * 100}%` }}></div>
+                                    }}
+                                >
+                                    <div className="absolute top-0 left-0 bottom-0 bg-[#ffd60a]" style={{ width: `${volume * 100}%` }} />
                                 </div>
                             </div>
                         </div>
-
                     </motion.section>
                 </main>
 

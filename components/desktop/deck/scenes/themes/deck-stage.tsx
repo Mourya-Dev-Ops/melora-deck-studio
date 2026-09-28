@@ -551,59 +551,67 @@ export function DeckStage({ currentTheme, onThemeChange, onSelectTheme, onOpenSe
                                             id={`studio-mix-${mix.id}`}
                                             style={{ backgroundImage: isOTG ? 'url("/glass-noise.png"), linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)' : 'repeating-linear-gradient(45deg, rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 2px, transparent 2px, transparent 4px)' }}
                                         >
-                                            {/* Screws */}
-                                            <div className="absolute top-2 left-2 w-2 h-2 rounded-full bg-gray-300 shadow-inner flex items-center justify-center">
-                                                <div className="w-1 h-0.5 bg-gray-400 rotate-45"></div>
+                                            {/* Realistic Metallic Countersunk Screws */}
+                                            <div className="absolute top-2 left-2 w-2.5 h-2.5 rounded-full bg-gradient-to-tr from-neutral-400 via-neutral-200 to-neutral-100 border border-neutral-600 shadow-inner flex items-center justify-center">
+                                                <div className="w-1.5 h-0.5 bg-neutral-700 rotate-45" />
                                             </div>
-                                            <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-gray-300 shadow-inner flex items-center justify-center">
-                                                <div className="w-1 h-0.5 bg-gray-400 -rotate-45"></div>
+                                            <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-gradient-to-tr from-neutral-400 via-neutral-200 to-neutral-100 border border-neutral-600 shadow-inner flex items-center justify-center">
+                                                <div className="w-1.5 h-0.5 bg-neutral-700 -rotate-45" />
                                             </div>
-                                            <div className="absolute bottom-2 left-2 w-2 h-2 rounded-full bg-gray-300 shadow-inner flex items-center justify-center">
-                                                <div className="w-1 h-0.5 bg-gray-400 rotate-12"></div>
+                                            <div className="absolute bottom-2 left-2 w-2.5 h-2.5 rounded-full bg-gradient-to-tr from-neutral-400 via-neutral-200 to-neutral-100 border border-neutral-600 shadow-inner flex items-center justify-center">
+                                                <div className="w-1.5 h-0.5 bg-neutral-700 rotate-12" />
                                             </div>
-                                            <div className="absolute bottom-2 right-2 w-2 h-2 rounded-full bg-gray-300 shadow-inner flex items-center justify-center">
-                                                <div className="w-1 h-0.5 bg-gray-400 -rotate-12"></div>
+                                            <div className="absolute bottom-2 right-2 w-2.5 h-2.5 rounded-full bg-gradient-to-tr from-neutral-400 via-neutral-200 to-neutral-100 border border-neutral-600 shadow-inner flex items-center justify-center">
+                                                <div className="w-1.5 h-0.5 bg-neutral-700 -rotate-12" />
                                             </div>
 
                                             {/* Label */}
                                             <div className={clsx(
-                                                "relative mx-2 mt-1 h-20 rounded-sm shadow-sm p-1 transform rotate-0 group-hover:rotate-[0.5deg] transition-transform duration-500 flex flex-col justify-center items-center",
+                                                "relative mx-2 mt-1 h-20 rounded-[3px] shadow-[0_2px_4px_rgba(0,0,0,0.15)] p-1.5 transform rotate-0 group-hover:rotate-[0.5deg] transition-transform duration-500 flex flex-col justify-between items-center border border-black/10",
                                                 isOTG ? "bg-white/80 backdrop-blur-sm" : "bg-amber-50"
                                             )}>
-                                                <div className={clsx("absolute top-0 left-0 w-full h-3 opacity-20", accentColor)}></div>
-                                                <div className="absolute top-1 left-1 font-mono font-bold text-gray-800 text-sm opacity-60">A</div>
-                                                <h3 className="font-hand font-bold text-sm text-gray-900 tracking-tight text-center line-clamp-2">
-                                                    {mix.title}
-                                                </h3>
-                                                <p className="font-mono text-[10px] text-gray-400 absolute bottom-1 uppercase tracking-widest">
-                                                    {isOTG ? "MASTER TAPE" : "Melora High Bias"}
-                                                </p>
-                                                <div className="w-full h-px bg-gray-200 mt-2 mb-1"></div>
-                                                <div className="w-full h-px bg-gray-200"></div>
+                                                <div className={clsx("absolute top-0 inset-x-0 h-3 flex items-center justify-between px-2 shadow-sm", accentColor)}>
+                                                    <span className="font-mono text-[7px] font-black text-white/90">SIDE A</span>
+                                                    <span className="font-mono text-[6px] font-bold text-white/80 tracking-wider">70µs EQ</span>
+                                                </div>
+                                                <div className="mt-3 w-full px-1">
+                                                    <h3 className="font-hand font-bold text-xs text-neutral-900 tracking-tight text-center line-clamp-1">
+                                                        {mix.title}
+                                                    </h3>
+                                                </div>
+                                                <div className="w-full flex items-center justify-between px-1 border-t border-neutral-200/80 pt-0.5">
+                                                    <span className="font-mono text-[7px] text-neutral-500 font-bold uppercase tracking-widest">
+                                                        {isOTG ? "MASTER TAPE" : "MELORA HIGH BIAS"}
+                                                    </span>
+                                                    <span className="font-mono text-[7px] text-neutral-600 font-bold">
+                                                        TYPE II
+                                                    </span>
+                                                </div>
                                             </div>
 
                                             {/* Reels */}
-                                            <div className="mx-4 mb-1 h-8 bg-black/20 rounded-full flex items-center justify-between px-2 relative backdrop-blur-sm">
+                                            <div className="mx-4 mb-1 h-8 bg-neutral-950/60 rounded-full flex items-center justify-between px-2 relative backdrop-blur-sm border border-black/30 shadow-inner">
                                                 {/* Left Reel */}
                                                 <div className={clsx(
-                                                    "w-8 h-8 bg-white rounded-full border-2 border-gray-800 flex items-center justify-center relative",
+                                                    "w-7 h-7 bg-neutral-100 rounded-full border border-neutral-800 flex items-center justify-center relative shadow-sm",
                                                     "group-hover:animate-spin"
                                                 )} style={{ animationDuration: '4s', animationTimingFunction: 'linear' }}>
-                                                    <div className="w-6 h-6 rounded-full border-2 border-dashed border-gray-400"></div>
-                                                    <div className="absolute w-1.5 h-1.5 bg-gray-800 rounded-full"></div>
+                                                    <div className="w-5 h-5 rounded-full border border-dashed border-neutral-400"></div>
+                                                    <div className="absolute w-1.5 h-1.5 bg-neutral-900 rounded-full"></div>
                                                 </div>
 
-                                                <div className="flex-grow h-4 mx-1 flex items-center justify-center">
-                                                    <span className="text-[6px] text-white/50 font-mono">TYPE I</span>
+                                                <div className="flex-grow h-4 mx-1 flex flex-col items-center justify-center">
+                                                    <div className="w-full h-0.5 bg-[#3a271c] mb-0.5" />
+                                                    <span className="text-[6px] text-white/70 font-mono font-bold tracking-widest">CH A</span>
                                                 </div>
 
                                                 {/* Right Reel */}
                                                 <div className={clsx(
-                                                    "w-8 h-8 bg-white rounded-full border-2 border-gray-800 flex items-center justify-center relative",
+                                                    "w-7 h-7 bg-neutral-100 rounded-full border border-neutral-800 flex items-center justify-center relative shadow-sm",
                                                     "group-hover:animate-spin"
                                                 )} style={{ animationDuration: '4s', animationTimingFunction: 'linear' }}>
-                                                    <div className="w-6 h-6 rounded-full border-2 border-dashed border-gray-400"></div>
-                                                    <div className="absolute w-1.5 h-1.5 bg-gray-800 rounded-full"></div>
+                                                    <div className="w-5 h-5 rounded-full border border-dashed border-neutral-400"></div>
+                                                    <div className="absolute w-1.5 h-1.5 bg-neutral-900 rounded-full"></div>
                                                 </div>
                                             </div>
 
@@ -719,130 +727,197 @@ export function DeckStage({ currentTheme, onThemeChange, onSelectTheme, onOpenSe
                         <div
                             ref={playerRef}
                             className={clsx(
-                                "bg-[#f8fafc] text-gray-800 rounded-2xl p-4 md:p-5 shadow-md border-4 border-gray-300 relative overflow-hidden",
-                                isCompact ? "max-w-full w-full" : "max-w-[340px]"
+                                "rounded-2xl p-4 md:p-5 relative overflow-hidden transition-all duration-300 select-none",
+                                isCompact ? "max-w-full w-full" : "max-w-[340px]",
+                                isDarkMode
+                                    ? "bg-[#16171b] text-neutral-100 shadow-[0_20px_50px_rgba(0,0,0,0.95),inset_0_1px_1px_rgba(255,255,255,0.22),inset_0_-2px_4px_rgba(0,0,0,0.85)] border-2 border-neutral-700/80"
+                                    : "bg-gradient-to-b from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] text-neutral-900 shadow-[0_16px_40px_rgba(0,0,0,0.25),inset_0_1px_2px_rgba(255,255,255,0.9),inset_0_-2px_4px_rgba(0,0,0,0.2)] border-2 border-neutral-300"
                             )}
+                            style={{
+                                backgroundImage: isDarkMode
+                                    ? 'repeating-linear-gradient(90deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px)'
+                                    : 'repeating-linear-gradient(90deg, rgba(0,0,0,0.015) 0px, rgba(0,0,0,0.015) 1px, transparent 1px, transparent 3px)'
+                            }}
                         >
-                            {/* Corner Screws */}
-                            <div className="absolute top-4 left-4 text-gray-400">
-                                <Plus size={14} />
+                            {/* Realistic Precision Countersunk Screws in 4 Corners */}
+                            <div className="absolute top-3 left-3 w-3 h-3 rounded-full bg-gradient-to-tr from-neutral-500 via-neutral-300 to-neutral-200 border border-neutral-600 shadow-inner flex items-center justify-center">
+                                <div className="w-1.5 h-0.5 bg-neutral-700 rotate-45" />
                             </div>
-                            <div className="absolute top-4 right-4 text-gray-400">
-                                <Plus size={14} />
+                            <div className="absolute top-3 right-3 w-3 h-3 rounded-full bg-gradient-to-tr from-neutral-500 via-neutral-300 to-neutral-200 border border-neutral-600 shadow-inner flex items-center justify-center">
+                                <div className="w-1.5 h-0.5 bg-neutral-700 -rotate-45" />
                             </div>
-                            <div className="absolute bottom-4 left-4 text-gray-400">
-                                <Plus size={14} />
+                            <div className="absolute bottom-3 left-3 w-3 h-3 rounded-full bg-gradient-to-tr from-neutral-500 via-neutral-300 to-neutral-200 border border-neutral-600 shadow-inner flex items-center justify-center">
+                                <div className="w-1.5 h-0.5 bg-neutral-700 rotate-12" />
                             </div>
-                            <div className="absolute bottom-4 right-4 text-gray-400">
-                                <Plus size={14} />
+                            <div className="absolute bottom-3 right-3 w-3 h-3 rounded-full bg-gradient-to-tr from-neutral-500 via-neutral-300 to-neutral-200 border border-neutral-600 shadow-inner flex items-center justify-center">
+                                <div className="w-1.5 h-0.5 bg-neutral-700 -rotate-12" />
                             </div>
 
                             {/* Title */}
                             {!isCompact && (
-                                <div className="text-center mb-4">
-                                    <h2 className="font-display text-gray-300 text-lg uppercase tracking-tighter">
+                                <div className="text-center mb-3">
+                                    <h2 className={clsx(
+                                        "font-display text-base md:text-lg uppercase tracking-wider",
+                                        isDarkMode ? "text-neutral-100 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]" : "text-neutral-800"
+                                    )}>
                                         Stereo Cassette Player
                                     </h2>
-                                    <p className="text-[10px] font-mono text-gray-400 tracking-[0.2em] mt-0.5">AUTO REVERSE</p>
+                                    <p className="text-[9px] font-mono tracking-[0.25em] mt-0.5 text-neutral-400 font-bold uppercase">
+                                        AUTO REVERSE • DIRECT DRIVE
+                                    </p>
                                 </div>
                             )}
 
-                            {/* Screen */}
+                            {/* Screen / Cassette Bay Window */}
                             <div className={clsx(
-                                "bg-[#1e1e1e] w-full rounded-lg shadow-[inset_2px_2px_6px_rgba(0,0,0,0.6)] relative mb-4 border-b-2 border-gray-700 flex items-center justify-center overflow-hidden",
-                                isCompact ? "h-32" : "aspect-[16/9]"
+                                "relative w-full rounded-xl overflow-hidden mb-3 border transition-colors duration-300 flex items-center justify-center",
+                                isCompact ? "h-32" : "aspect-[16/9]",
+                                isDarkMode
+                                    ? "bg-[#0b0c0f] border-neutral-700/80 shadow-[inset_0_4px_16px_rgba(0,0,0,0.95)]"
+                                    : "bg-[#18191d] border-neutral-600/70 shadow-[inset_0_4px_16px_rgba(0,0,0,0.85)]"
                             )}>
-                                {/* Scanlines */}
-                                <div className="absolute inset-0 z-10 pointer-events-none opacity-20" style={{
-                                    background: 'linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1))',
+                                {/* Internal Warm Backlight Chamber Glow when playing */}
+                                <div className={clsx(
+                                    "absolute inset-0 transition-opacity duration-700 pointer-events-none z-0",
+                                    isPlaying ? "bg-amber-500/[0.12] opacity-100" : "opacity-0"
+                                )} />
+
+                                {/* Glass Reflection & Scanline Overlay */}
+                                <div className="absolute inset-0 z-20 pointer-events-none opacity-15" style={{
+                                    background: 'linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2))',
                                     backgroundSize: '100% 4px'
-                                }}></div>
-                                {/* Glass Reflection */}
-                                <div className="absolute top-2 left-0 right-0 h-1/2 bg-gradient-to-b from-white/5 to-transparent z-10"></div>
-                                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent z-20 pointer-events-none"></div>
+                                }} />
+                                <div className="absolute top-0 inset-x-0 h-[45%] bg-gradient-to-b from-white/[0.08] to-transparent z-20 pointer-events-none" />
+                                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.04] to-transparent z-20 pointer-events-none" />
 
                                 {hasCassette && activeMix ? (
                                     <motion.div
-                                        className="w-[95%] h-[92%] rounded-md shadow-lg border-t border-l border-white/20 border-b border-r border-black/30 p-1.5 flex flex-col justify-between relative z-10"
+                                        className="w-[95%] h-[92%] rounded-md shadow-2xl border-t border-l border-white/20 border-b border-r border-black/50 p-1.5 flex flex-col justify-between relative z-10 overflow-hidden"
                                         style={{
-                                            backgroundColor: activeMix.color === 'purple' ? '#9333ea' :
-                                                activeMix.color === 'orange' ? '#f97316' :
-                                                    activeMix.color === 'green' ? '#16a34a' :
-                                                        activeMix.color === 'red' ? '#dc2626' :
-                                                            activeMix.color === 'blue' ? '#2563eb' :
-                                                                activeMix.color === 'yellow' ? '#eab308' :
-                                                                    activeMix.color === 'cyan' ? '#06b6d4' :
-                                                                        activeMix.color === 'pink' ? '#db2777' :
-                                                                            activeMix.color === 'black' ? '#27272a' :
-                                                                                '#e5e7eb',
-                                            backgroundImage: 'repeating-linear-gradient(45deg, rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 2px, transparent 2px, transparent 4px)'
+                                            backgroundColor: activeMix.color === 'purple' ? '#1f132b' :
+                                                activeMix.color === 'orange' ? '#2b170c' :
+                                                    activeMix.color === 'green' ? '#0f2619' :
+                                                        activeMix.color === 'red' ? '#2b1012' :
+                                                            activeMix.color === 'blue' ? '#0e1f38' :
+                                                                activeMix.color === 'yellow' ? '#2e270e' :
+                                                                    activeMix.color === 'cyan' ? '#0c272e' :
+                                                                        activeMix.color === 'pink' ? '#2e1224' :
+                                                                            activeMix.color === 'black' ? '#18181b' :
+                                                                                '#27272a',
+                                            backgroundImage: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 4px)'
                                         }}
                                     >
-                                        {/* Screws */}
-                                        <div className="absolute top-1 left-1 w-1.5 h-1.5 rounded-full bg-gray-300 shadow-sm flex items-center justify-center"><div className="w-full h-[0.5px] bg-gray-500 rotate-45"></div></div>
-                                        <div className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-gray-300 shadow-sm flex items-center justify-center"><div className="w-full h-[0.5px] bg-gray-500 rotate-45"></div></div>
-                                        <div className="absolute bottom-1 left-1 w-1.5 h-1.5 rounded-full bg-gray-300 shadow-sm flex items-center justify-center"><div className="w-full h-[0.5px] bg-gray-500 rotate-45"></div></div>
-                                        <div className="absolute bottom-1 right-1 w-1.5 h-1.5 rounded-full bg-gray-300 shadow-sm flex items-center justify-center"><div className="w-full h-[0.5px] bg-gray-500 rotate-45"></div></div>
+                                        {/* Precision Corner Screws on Cassette Shell */}
+                                        <div className="absolute top-1 left-1 w-2 h-2 rounded-full bg-neutral-400 border border-neutral-600 shadow-sm flex items-center justify-center"><div className="w-1.5 h-[0.5px] bg-neutral-700 rotate-45" /></div>
+                                        <div className="absolute top-1 right-1 w-2 h-2 rounded-full bg-neutral-400 border border-neutral-600 shadow-sm flex items-center justify-center"><div className="w-1.5 h-[0.5px] bg-neutral-700 -rotate-45" /></div>
+                                        <div className="absolute bottom-1 left-1 w-2 h-2 rounded-full bg-neutral-400 border border-neutral-600 shadow-sm flex items-center justify-center"><div className="w-1.5 h-[0.5px] bg-neutral-700 rotate-12" /></div>
+                                        <div className="absolute bottom-1 right-1 w-2 h-2 rounded-full bg-neutral-400 border border-neutral-600 shadow-sm flex items-center justify-center"><div className="w-1.5 h-[0.5px] bg-neutral-700 -rotate-12" /></div>
 
-                                        {/* Label */}
-                                        <div className="relative bg-amber-50 mx-1 mt-0.5 h-16 rounded-sm shadow-sm p-1 flex flex-col justify-center items-center">
-                                            <div className="absolute top-0 left-0 w-full h-2 opacity-20 bg-black/10"></div>
-                                            <div className="absolute top-1 left-1 font-mono font-bold text-gray-800 text-[10px] opacity-60">A</div>
-                                            <h3 className="font-hand font-bold text-xs text-gray-900 tracking-tight text-center line-clamp-1">
+                                        {/* J-Card Label */}
+                                        <div className="relative bg-amber-50 mx-1 mt-0.5 h-15 rounded-[3px] shadow-[0_1px_3px_rgba(0,0,0,0.15)] p-1 flex flex-col justify-between items-center border border-black/10">
+                                            <div className="w-full flex items-center justify-between px-1.5 py-0.5 rounded-t-[2px] bg-neutral-900 text-white">
+                                                <span className="font-mono text-[7px] font-black text-amber-300">SIDE A</span>
+                                                <span className="font-mono text-[6px] tracking-wider text-neutral-300">DOLBY B-C NR</span>
+                                                <span className="font-mono text-[7px] font-bold text-neutral-300">70µs</span>
+                                            </div>
+                                            <h3 className="font-hand font-bold text-xs text-neutral-900 tracking-tight text-center line-clamp-1 px-1">
                                                 {currentSong ? decodeHtml(currentSong.name) : activeMix.title}
                                             </h3>
-                                            <p className="font-mono text-[8px] text-gray-400 absolute bottom-0.5 uppercase tracking-widest">Melora High Bias</p>
-                                        </div>
-
-                                        {/* Reels */}
-                                        <div className="mx-3 mb-0.5 h-6 bg-black/20 rounded-full flex items-center justify-between px-2 relative">
-                                            {/* Left Reel */}
-                                            <motion.div
-                                                className="w-6 h-6 bg-white rounded-full border-2 border-gray-800 flex items-center justify-center relative"
-                                                animate={isPlaying ? { rotate: 360 } : {}}
-                                                transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
-                                            >
-                                                <div className="w-4 h-4 rounded-full border-2 border-dashed border-gray-400"></div>
-                                                <div className="absolute w-1 h-1 bg-gray-800 rounded-full"></div>
-                                            </motion.div>
-
-                                            <div className="flex-grow h-3 mx-1 flex items-center justify-center">
-                                                <span className="text-[5px] text-white/50 font-mono">TYPE I</span>
+                                            <div className="w-full flex items-center justify-between px-1 border-t border-neutral-200 pt-0.5">
+                                                <span className="font-mono text-[6.5px] text-neutral-500 uppercase tracking-widest font-bold">
+                                                    Melora High Bias
+                                                </span>
+                                                <span className="font-mono text-[6.5px] text-neutral-600 font-bold">
+                                                    TYPE II
+                                                </span>
                                             </div>
-
-                                            {/* Right Reel */}
-                                            <motion.div
-                                                className="w-6 h-6 bg-white rounded-full border-2 border-gray-800 flex items-center justify-center relative"
-                                                animate={isPlaying ? { rotate: 360 } : {}}
-                                                transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
-                                            >
-                                                <div className="w-4 h-4 rounded-full border-2 border-dashed border-gray-400"></div>
-                                                <div className="absolute w-1 h-1 bg-gray-800 rounded-full"></div>
-                                            </motion.div>
                                         </div>
+
+                                        {/* Reels with Dynamic Tape Spool Winding Physics */}
+                                        {(() => {
+                                            const leftSpoolRadius = 8 + Math.sqrt(Math.max(0, 1 - progress)) * 10;
+                                            const rightSpoolRadius = 8 + Math.sqrt(Math.max(0, progress)) * 10;
+
+                                            return (
+                                                <div className="mx-2 mb-0.5 h-7 bg-neutral-950/80 rounded-full flex items-center justify-between px-2 relative border border-black/40 shadow-inner">
+                                                    {/* Left Spool (Supply) */}
+                                                    <div className="relative flex items-center justify-center">
+                                                        <div
+                                                            className="rounded-full bg-[#241710] border border-[#3d271c] flex items-center justify-center transition-all duration-200"
+                                                            style={{ width: `${leftSpoolRadius * 2}px`, height: `${leftSpoolRadius * 2}px` }}
+                                                        >
+                                                            <motion.div
+                                                                className="w-5 h-5 bg-neutral-100 rounded-full border border-neutral-800 flex items-center justify-center relative shadow-sm"
+                                                                animate={isPlaying ? { rotate: 360 } : {}}
+                                                                transition={{ repeat: Infinity, duration: 3.5, ease: "linear" }}
+                                                            >
+                                                                <div className="w-3.5 h-3.5 rounded-full border border-dashed border-neutral-400" />
+                                                                <div className="absolute w-1.5 h-1.5 bg-neutral-900 rounded-full" />
+                                                            </motion.div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Center Tape Bridge & Run Indicator */}
+                                                    <div className="flex-grow h-3 mx-1 flex flex-col items-center justify-center">
+                                                        <div className="w-full h-0.5 bg-[#3a271c] mb-0.5" />
+                                                        <span className="text-[6px] text-amber-300 font-mono font-bold tracking-widest">
+                                                            {Math.round(progress * 100)}%
+                                                        </span>
+                                                    </div>
+
+                                                    {/* Right Spool (Take-up) */}
+                                                    <div className="relative flex items-center justify-center">
+                                                        <div
+                                                            className="rounded-full bg-[#241710] border border-[#3d271c] flex items-center justify-center transition-all duration-200"
+                                                            style={{ width: `${rightSpoolRadius * 2}px`, height: `${rightSpoolRadius * 2}px` }}
+                                                        >
+                                                            <motion.div
+                                                                className="w-5 h-5 bg-neutral-100 rounded-full border border-neutral-800 flex items-center justify-center relative shadow-sm"
+                                                                animate={isPlaying ? { rotate: 360 } : {}}
+                                                                transition={{ repeat: Infinity, duration: 3.5, ease: "linear" }}
+                                                            >
+                                                                <div className="w-3.5 h-3.5 rounded-full border border-dashed border-neutral-400" />
+                                                                <div className="absolute w-1.5 h-1.5 bg-neutral-900 rounded-full" />
+                                                            </motion.div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })()}
 
                                         {/* Song Count Badge */}
-                                        <div className="absolute -right-1 top-2/3 bg-black text-white text-[8px] font-bold py-0 px-1.5 rounded shadow-md border border-gray-700">
+                                        <div className="absolute -right-1 top-2/3 bg-neutral-950 text-white text-[7.5px] font-black py-0 px-1.5 rounded shadow-md border border-neutral-700">
                                             {activeMix.songs.length} SONGS
                                         </div>
                                     </motion.div>
                                 ) : (
-                                    <p className="font-mono text-gray-600 text-sm tracking-widest z-0">NO CASSETTE</p>
+                                    <div className="flex flex-col items-center justify-center gap-1 z-10">
+                                        <p className="font-mono text-neutral-500 font-bold text-xs tracking-[0.2em] uppercase">NO CASSETTE</p>
+                                        <span className="text-[8px] font-mono text-neutral-600">DROP TAPE TO PLAY</span>
+                                    </div>
                                 )}
                             </div>
 
                             {/* LCD Display */}
-                            <div className="bg-[#9ca3af] h-10 w-full rounded-md shadow-inner mb-3 flex items-center px-3 border border-gray-400/30 overflow-hidden whitespace-nowrap">
-                                <span className="font-mono text-black font-bold tracking-widest text-sm flex items-center gap-2 flex-1 min-w-0">
+                            <div className={clsx(
+                                "h-10 w-full rounded-lg shadow-[inset_0_2px_6px_rgba(0,0,0,0.8)] mb-3 flex items-center px-3 border overflow-hidden whitespace-nowrap transition-colors",
+                                isDarkMode
+                                    ? "bg-[#0a0c0f] border-neutral-800 text-amber-400 shadow-[inset_0_0_12px_rgba(0,0,0,0.9)]"
+                                    : "bg-[#9da793] border-[#7d8773] text-[#1c2217]"
+                            )}>
+                                <span className={clsx(
+                                    "font-mono font-bold tracking-widest text-xs flex items-center gap-2 flex-1 min-w-0",
+                                    isDarkMode && "drop-shadow-[0_0_6px_rgba(251,191,36,0.6)]"
+                                )}>
                                     {currentSong ? (
                                         <>
-                                            {isDownloaded(currentTrack?.id || currentSong.id) && <span className="bg-black/10 px-1 rounded text-[10px]">OFFLINE</span>}
-                                            <span className={`truncate ${(playbackState === 'buffering' || playbackState === 'stalled' || playbackState === 'loading') ? 'animate-pulse text-gray-700' : ''}`}>
+                                            {isDownloaded(currentTrack?.id || currentSong.id) && <span className="bg-black/20 px-1 rounded text-[9px] border border-black/10">OFFLINE</span>}
+                                            <span className={`truncate ${(playbackState === 'buffering' || playbackState === 'stalled' || playbackState === 'loading') ? 'animate-pulse' : ''}`}>
                                                 {(playbackState === 'buffering' || playbackState === 'loading') ? 'BUFFERING...' : playbackState === 'stalled' ? 'STALLED...' : `▶ ${decodeHtml(currentSong.name)}`}
                                             </span>
                                         </>
                                     ) : (
-                                        "READY"
+                                        "MELORA • READY"
                                     )}
                                 </span>
                                 {/* LCD Metadata & Quality Badge */}
@@ -862,135 +937,183 @@ export function DeckStage({ currentTheme, onThemeChange, onSelectTheme, onOpenSe
                             </div>
 
                             {/* Visualizer */}
-                            <Visualizer isPlaying={isPlaying} accentColor="#22c55e" className="w-full h-8 rounded mb-4 opacity-90" />
+                            <div className="p-0.5 rounded-lg bg-black/60 border border-neutral-800 shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] mb-3 overflow-hidden">
+                                <Visualizer isPlaying={isPlaying} accentColor="#22c55e" className="w-full h-7 rounded opacity-90" />
+                            </div>
 
-                            {/* Progress Bar */}
-                            <div className="mb-6 px-1">
-                                <div className="flex justify-between text-[10px] font-mono text-gray-400 mb-1">
+                            {/* Progress Bar / Tape Counter Track */}
+                            <div className="mb-4 px-1">
+                                <div className="flex justify-between text-[9px] font-mono font-bold text-neutral-400 mb-1">
                                     <span>{formatTime(currentTime)}</span>
+                                    <span className="text-[8px] tracking-[0.2em] uppercase opacity-70">TAPE COUNTER</span>
                                     <span>{formatTime(songDuration)}</span>
                                 </div>
                                 <div
-                                    className="h-2 bg-gray-200 rounded-full overflow-hidden shadow-inner cursor-pointer"
+                                    className={clsx(
+                                        "h-2.5 rounded-full overflow-hidden shadow-inner cursor-pointer p-0.5 border transition-colors",
+                                        isDarkMode ? "bg-neutral-950 border-neutral-700/60 shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)]" : "bg-neutral-300 border-neutral-400 shadow-inner"
+                                    )}
                                     onClick={(e) => {
                                         const rect = e.currentTarget.getBoundingClientRect();
                                         const p = (e.clientX - rect.left) / rect.width;
                                         seek(Math.min(Math.max(p, 0), 1));
                                     }}
                                 >
-                                    <div className="h-full bg-gray-800" style={{ width: `${progress * 100}%` }}></div>
+                                    <div
+                                        className="h-full rounded-full bg-gradient-to-r from-amber-600 via-amber-500 to-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.5)] relative"
+                                        style={{ width: `${progress * 100}%` }}
+                                    >
+                                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-3 bg-white rounded-sm shadow-md border border-neutral-400" />
+                                    </div>
                                 </div>
                             </div>
 
-                            {/* Playback Controls */}
-                            <div className="flex justify-center items-center gap-4 mb-6">
+                            {/* Playback Controls (Heavy Tactile Milled Aluminum Push-Buttons) */}
+                            <div className="flex justify-center items-center gap-3.5 mb-5">
+                                {/* Shuffle */}
                                 <button
+                                    type="button"
                                     onClick={() => { playClick(); setShuffle(!shuffle); }}
-                                    className={`w-8 h-8 rounded-full shadow-[0_2px_4px_rgba(0,0,0,0.2)] active:shadow-inner active:scale-95 transition-all flex items-center justify-center ${shuffle ? 'bg-gradient-to-b from-blue-400 to-blue-600 text-white border-2 border-blue-300' : 'bg-gradient-to-b from-gray-200 to-gray-400 text-gray-600 border border-gray-300 hover:from-gray-300 hover:to-gray-500'}`}
+                                    className={clsx(
+                                        "w-9 h-9 rounded-full shadow-[0_4px_8px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.25)] active:translate-y-0.5 active:shadow-inner transition-all flex items-center justify-center border",
+                                        shuffle
+                                            ? "bg-amber-500/20 text-amber-400 border-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)]"
+                                            : (isDarkMode ? "bg-gradient-to-b from-neutral-700 via-neutral-800 to-neutral-900 text-neutral-300 border-neutral-600 hover:text-white" : "bg-gradient-to-b from-neutral-200 via-neutral-300 to-neutral-400 text-neutral-700 border-neutral-300")
+                                    )}
                                     title={shuffle ? 'Shuffle: ON' : 'Shuffle: OFF'}
                                 >
                                     <Shuffle size={14} />
                                 </button>
+
+                                {/* Prev */}
                                 <button
+                                    type="button"
                                     onClick={() => { playClick(); prev(); }}
-                                    className="w-10 h-10 rounded-full bg-gradient-to-b from-blue-400 to-blue-600 text-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] active:shadow-inner active:scale-95 transition-all flex items-center justify-center border-2 border-blue-300"
+                                    className={clsx(
+                                        "w-11 h-11 rounded-full shadow-[0_6px_12px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.3)] active:translate-y-0.5 active:shadow-inner transition-all flex items-center justify-center border",
+                                        isDarkMode
+                                            ? "bg-gradient-to-b from-neutral-600 via-neutral-700 to-neutral-800 text-neutral-200 border-neutral-500/70 hover:brightness-110"
+                                            : "bg-gradient-to-b from-neutral-100 via-neutral-200 to-neutral-300 text-neutral-800 border-neutral-400 shadow-md hover:brightness-105"
+                                    )}
                                 >
-                                    <SkipBack size={20} />
+                                    <SkipBack size={18} />
                                 </button>
+
+                                {/* Play / Pause */}
                                 <button
+                                    type="button"
                                     onClick={() => { playClick(); togglePlay(); }}
-                                    className="w-14 h-14 rounded-full bg-gradient-to-b from-blue-500 to-blue-700 text-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] active:shadow-inner active:scale-95 transition-all flex items-center justify-center border-4 border-blue-300 z-10"
+                                    className={clsx(
+                                        "w-14 h-14 rounded-full shadow-[0_8px_20px_rgba(0,0,0,0.6),inset_0_1px_2px_rgba(255,255,255,0.4)] active:translate-y-1 active:shadow-inner transition-all flex items-center justify-center border-2 z-10",
+                                        isPlaying
+                                            ? "bg-gradient-to-b from-amber-500 via-amber-600 to-amber-700 text-neutral-950 border-amber-300 shadow-[0_0_18px_rgba(245,158,11,0.5)]"
+                                            : (isDarkMode
+                                                ? "bg-gradient-to-b from-neutral-600 via-neutral-700 to-neutral-800 text-neutral-100 border-neutral-400 hover:brightness-110"
+                                                : "bg-gradient-to-b from-neutral-100 via-neutral-200 to-neutral-300 text-neutral-900 border-neutral-400 hover:brightness-105")
+                                    )}
                                 >
-                                    {isPlaying ? <Pause size={28} /> : <Play size={28} className="pl-0.5" />}
+                                    {isPlaying ? <Pause size={24} /> : <Play size={24} className="pl-0.5" />}
                                 </button>
+
+                                {/* Next */}
                                 <button
+                                    type="button"
                                     onClick={() => { playClick(); next(); }}
-                                    className="w-10 h-10 rounded-full bg-gradient-to-b from-blue-400 to-blue-600 text-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] active:shadow-inner active:scale-95 transition-all flex items-center justify-center border-2 border-blue-300"
+                                    className={clsx(
+                                        "w-11 h-11 rounded-full shadow-[0_6px_12px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.3)] active:translate-y-0.5 active:shadow-inner transition-all flex items-center justify-center border",
+                                        isDarkMode
+                                            ? "bg-gradient-to-b from-neutral-600 via-neutral-700 to-neutral-800 text-neutral-200 border-neutral-500/70 hover:brightness-110"
+                                            : "bg-gradient-to-b from-neutral-100 via-neutral-200 to-neutral-300 text-neutral-800 border-neutral-400 shadow-md hover:brightness-105"
+                                    )}
                                 >
-                                    <SkipForward size={20} />
+                                    <SkipForward size={18} />
                                 </button>
+
+                                {/* Repeat */}
                                 <button
+                                    type="button"
                                     onClick={() => { playClick(); setRepeat(repeat === 'off' ? 'all' : repeat === 'all' ? 'one' : 'off'); }}
-                                    className={`w-8 h-8 rounded-full shadow-[0_2px_4px_rgba(0,0,0,0.2)] active:shadow-inner active:scale-95 transition-all flex items-center justify-center relative ${repeat !== 'off' ? 'bg-gradient-to-b from-blue-400 to-blue-600 text-white border-2 border-blue-300' : 'bg-gradient-to-b from-gray-200 to-gray-400 text-gray-600 border border-gray-300 hover:from-gray-300 hover:to-gray-500'}`}
+                                    className={clsx(
+                                        "w-9 h-9 rounded-full shadow-[0_4px_8px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.25)] active:translate-y-0.5 active:shadow-inner transition-all flex items-center justify-center border relative",
+                                        repeat !== 'off'
+                                            ? "bg-amber-500/20 text-amber-400 border-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)]"
+                                            : (isDarkMode ? "bg-gradient-to-b from-neutral-700 via-neutral-800 to-neutral-900 text-neutral-300 border-neutral-600 hover:text-white" : "bg-gradient-to-b from-neutral-200 via-neutral-300 to-neutral-400 text-neutral-700 border-neutral-300")
+                                    )}
                                     title={`Repeat: ${repeat.toUpperCase()}`}
                                 >
-                                    <Repeat size={14} />{repeat === 'one' && <span className="absolute -top-1 -right-1 text-[8px] font-bold bg-blue-500 text-white rounded-full w-3 h-3 flex items-center justify-center">1</span>}
+                                    <Repeat size={14} />
+                                    {repeat === 'one' && <span className="absolute -top-1 -right-1 text-[7px] font-black bg-amber-500 text-black rounded-full w-3 h-3 flex items-center justify-center">1</span>}
                                 </button>
                             </div>
 
                             {/* Footer Controls */}
-                            <div className="flex items-center justify-between px-4 text-xs font-mono text-gray-500 font-bold">
+                            <div className="flex items-center justify-between px-2 text-xs font-mono text-neutral-400 font-bold border-t border-neutral-700/40 pt-3">
                                 {!isCompact && (
                                     <div className="flex items-center gap-3">
-                                        <div className="flex items-center gap-1">
-                                            <div className="w-2 h-2 rounded-full bg-gray-300 shadow-inner"></div>
-                                            <span>REC</span>
+                                        <div className="flex items-center gap-1.5">
+                                            <div className={clsx(
+                                                "w-2.5 h-2.5 rounded-full border border-black/60 transition-all",
+                                                isPlaying ? "bg-emerald-400 shadow-[0_0_8px_#34d399]" : "bg-neutral-700"
+                                            )} />
+                                            <span className="text-[9px] tracking-wider">REC</span>
                                         </div>
-                                        <div className="flex items-center gap-1">
-                                            <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                                            <span>BATT</span>
+                                        <div className="flex items-center gap-1.5">
+                                            <div className="w-2.5 h-2.5 rounded-full bg-red-500 shadow-[0_0_8px_#ef4444] border border-black/60" />
+                                            <span className="text-[9px] tracking-wider">BATT</span>
                                         </div>
                                     </div>
                                 )}
 
                                 <button
+                                    type="button"
                                     onClick={() => {
                                         playEject();
                                         setIsEjecting(true);
                                         setTimeout(() => {
-                                            if (activeMixId) loadMix(activeMixId); // Toggle off or explicit empty? 
-                                            // Actually user wants "Unsafe eject". 
-                                            // We usually unset the active mix. 
-                                            // The context might not support null. 
-                                            // I'll simulate stop for now or assume loadMix("") is what we have but it's "unsafe".
-                                            // The best fix is to not call loadMix with empty string if it expects ID. 
-                                            // But if we want to "unload", we might need a dedicated `eject` or `stop` action.
-                                            // I'll use `loadMix("")` but add a comment acknowledging the audit or cast it if needed, 
-                                            // OR better: use playEject() sound and just stop?
-                                            // Re-reading bug: "Unsafe ... using loadMix("")".
-                                            // Fix: "Introduce explicit ejectMix() OR allow loadMix(null)".
-                                            // Since I can't change Context easily here, I will assume empty string is the current "Unload" signal 
-                                            // but guard it.
                                             loadMix("");
                                             setIsEjecting(false);
-                                            // Auto Switch back to Rack
                                             if (viewMode === 'player') setViewMode('rack');
                                         }, 500);
                                     }}
                                     disabled={isEjecting}
-                                    className={`flex flex-col items-center cursor-pointer hover:text-blue-600 transition-colors ${isEjecting ? 'opacity-50' : ''}`}
+                                    className={`flex flex-col items-center cursor-pointer hover:text-amber-400 transition-colors ${isEjecting ? 'opacity-50' : ''}`}
                                 >
                                     <Disc size={14} />
-                                    <span className="mt-0.5 tracking-widest text-[9px] font-bold">EJECT</span>
+                                    <span className="mt-0.5 tracking-widest text-[8px] font-bold">EJECT</span>
                                 </button>
 
                                 <button
+                                    type="button"
                                     onClick={() => {
-                                        if (!showLyrics) setShowEq(false); // Exclusive
+                                        if (!showLyrics) setShowEq(false);
                                         setShowLyrics(prev => !prev);
                                     }}
-                                    className={`flex flex-col items-center cursor-pointer transition-colors ${showLyrics ? 'text-blue-500' : 'hover:text-blue-600'}`}
+                                    className={`flex flex-col items-center cursor-pointer transition-colors ${showLyrics ? 'text-blue-400' : 'hover:text-blue-400'}`}
                                 >
                                     <Mic2 size={14} />
-                                    <span className="mt-0.5 tracking-widest text-[9px] font-bold">LYRICS</span>
+                                    <span className="mt-0.5 tracking-widest text-[8px] font-bold">LYRICS</span>
                                 </button>
 
                                 <button
+                                    type="button"
                                     onClick={() => {
-                                        if (!showEq) setShowLyrics(false); // Exclusive
+                                        if (!showEq) setShowLyrics(false);
                                         setShowEq(prev => !prev);
                                     }}
-                                    className={`flex flex-col items-center cursor-pointer transition-colors ${showEq ? 'text-blue-500' : 'hover:text-blue-600'}`}
+                                    className={`flex flex-col items-center cursor-pointer transition-colors ${showEq ? 'text-purple-400' : 'hover:text-purple-400'}`}
                                 >
                                     <SlidersHorizontal size={14} />
-                                    <span className="mt-0.5 tracking-widest text-[9px] font-bold">EQ</span>
+                                    <span className="mt-0.5 tracking-widest text-[8px] font-bold">EQ</span>
                                 </button>
 
-                                <div className="flex items-center gap-2 w-36 ml-4">
-                                    <span className="text-[10px] font-bold text-gray-500 tracking-wider font-mono shrink-0">VOLUME</span>
-                                    <Volume2 size={16} className="text-gray-400 shrink-0" />
+                                <div className="flex items-center gap-2 w-32 ml-2">
+                                    <span className="text-[9px] font-bold text-neutral-400 tracking-wider font-mono shrink-0">VOL</span>
+                                    <Volume2 size={14} className="text-neutral-400 shrink-0" />
                                     <div
-                                        className="h-1.5 flex-grow bg-gray-300 rounded-full relative cursor-pointer z-50 group hover:h-2 transition-all"
+                                        className={clsx(
+                                            "h-2 flex-grow rounded-full relative cursor-pointer z-50 group border transition-all shadow-inner",
+                                            isDarkMode ? "bg-neutral-950 border-neutral-700/60" : "bg-neutral-300 border-neutral-400"
+                                        )}
                                         onPointerDown={(e) => e.stopPropagation()}
                                         onClick={(e) => {
                                             const rect = e.currentTarget.getBoundingClientRect();
@@ -998,11 +1121,16 @@ export function DeckStage({ currentTheme, onThemeChange, onSelectTheme, onOpenSe
                                             setVolume(Math.min(Math.max(p, 0), 1));
                                         }}
                                     >
-                                        <div className="absolute top-0 left-0 bottom-0 bg-blue-500 rounded-full pointer-events-none transition-all group-hover:bg-blue-400" style={{ width: `${volume * 100}%` }}></div>
                                         <div
-                                            className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white border border-gray-400 rounded-full shadow-sm pointer-events-none transition-transform group-hover:scale-110"
+                                            className="absolute top-0 left-0 bottom-0 bg-gradient-to-r from-amber-600 to-amber-400 rounded-full pointer-events-none transition-all shadow-[0_0_6px_rgba(245,158,11,0.5)]"
+                                            style={{ width: `${volume * 100}%` }}
+                                        />
+                                        <div
+                                            className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-gradient-to-b from-white via-neutral-200 to-neutral-400 border border-neutral-500 rounded-full shadow-md pointer-events-none transition-transform group-hover:scale-110 flex items-center justify-center"
                                             style={{ left: `calc(${volume * 100}% - 6px)` }}
-                                        ></div>
+                                        >
+                                            <div className="w-1 h-1 rounded-full bg-amber-500" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
