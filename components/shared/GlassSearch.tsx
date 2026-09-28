@@ -102,27 +102,19 @@ export function GlassSearch({ onClose, initialQuery = "", onSongSelect, desktopM
     }, [onSongSelect, playInstantMix, results]);
 
 
+    const [trackToAdd, setTrackToAdd] = useState<PlayableTrack | null>(null);
+
     const handleAddAction = useCallback((e: React.MouseEvent, track: PlayableTrack) => {
         e.stopPropagation();
+        setTrackToAdd(track);
+    }, []);
 
-        // DECK STUDIO MODE: Auto-add to active mix OR latest
-        let targetMixId = activeMixId;
-        if (!targetMixId && mixes.length > 0) {
-            targetMixId = mixes[mixes.length - 1].id;
-        }
-
-        if (targetMixId) {
-            const activeMix = mixes.find(m => m.id === targetMixId);
-            if (activeMix) {
-                updateMix(targetMixId, { songs: [...activeMix.songs, track] });
-                showToast(`Added to "${activeMix.title}"`, 'success');
-            } else {
-                showToast("Cassette not found", 'error');
-            }
-        } else {
-            showToast("Please create a cassette first", 'error');
-        }
-    }, [activeMixId, mixes, updateMix, showToast]);
+    const addToTape = useCallback((mix: Mix) => {
+        if (!trackToAdd) return;
+        updateMix(mix.id, { songs: [...mix.songs, trackToAdd] });
+        showToast(`Added to "${mix.title}"`, 'success');
+        setTrackToAdd(null);
+    }, [trackToAdd, updateMix]);
 
 
     // --- KEYBOARD SHORTCUTS ---
@@ -207,7 +199,46 @@ export function GlassSearch({ onClose, initialQuery = "", onSongSelect, desktopM
                 </div>
             </div>
 
-
+            {/* --- TAPE SELECTOR MODAL --- */}
+            <AnimatePresence>
+                {trackToAdd && (
+                    <motion.div
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                        className="absolute inset-0 z-[150] flex items-center justify-center bg-black/60 backdrop-blur-md"
+                        onClick={() => setTrackToAdd(null)}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
+                            className="bg-zinc-900 border border-white/10 rounded-2xl p-6 w-full max-w-sm max-h-[80vh] flex flex-col"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-lg font-bold text-white">Add to Tape</h3>
+                                <button onClick={() => setTrackToAdd(null)} className="p-1 rounded-full hover:bg-white/10 text-white/50 hover:text-white transition-colors">
+                                    <X size={16} />
+                                </button>
+                            </div>
+                            <p className="text-xs text-white/50 mb-4 truncate">Selecting tape for: {decodeHtml(trackToAdd.title)}</p>
+                            <div className="flex-1 overflow-y-auto space-y-2 no-scrollbar pr-2">
+                                {mixes.filter(m => m.pinned && !['search-results', 'quick-play', 'otg-tape', 'discovery-mix'].includes(m.id)).length > 0 ? (
+                                    mixes.filter(m => m.pinned && !['search-results', 'quick-play', 'otg-tape', 'discovery-mix'].includes(m.id)).map(mix => (
+                                        <button
+                                            key={mix.id}
+                                            onClick={() => addToTape(mix)}
+                                            className="w-full flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 transition-colors text-left"
+                                        >
+                                            <span className="font-medium text-white text-sm truncate">{mix.title}</span>
+                                            <span className="text-xs text-white/40">{mix.songs.length} songs</span>
+                                        </button>
+                                    ))
+                                ) : (
+                                    <p className="text-center text-white/40 text-sm py-4">No custom tapes available.</p>
+                                )}
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* --- TOAST NOTIFICATION --- */}
             <AnimatePresence>

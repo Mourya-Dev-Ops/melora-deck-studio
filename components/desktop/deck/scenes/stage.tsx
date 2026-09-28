@@ -32,7 +32,7 @@ import { DesktopSettingsModal } from "@/components/ui/desktop-settings-modal";
 import { EditMixModal } from "@/components/ui/edit-mix-modal";
 // import { InstallPrompt } from "@/components/ui/install-prompt";
 import { toPng } from "html-to-image";
-import { CinemaModeDesktop } from "../cinema-mode-desktop";
+import { PhotoModeDesktop } from "../photo-mode";
 import { QueueModal } from "@/components/ui/queue-modal";
 import { ShareMixModal } from "@/components/ui/share-mix-modal";
 import { DesktopThemeSelector } from "@/components/ui/desktop-theme-selector";
@@ -92,7 +92,7 @@ export function WindowsStage({ onSwitchToMobile, initialTheme, isMobileDevice }:
     const [searchTargetMixId, setSearchTargetMixId] = useState<string | null>(null);
     const [newMixTitle, setNewMixTitle] = useState("");
     const [currentTheme, setCurrentTheme] = useState<ThemeKey>('BOOMBOX');
-    const [isCinemaMode, setIsCinemaMode] = useState(false);
+    const [isPhotoMode, setIsPhotoMode] = useState(false);
     const [editingMix, setEditingMix] = useState<Mix | null>(null);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isQueueOpen, setIsQueueOpen] = useState(false);
@@ -456,7 +456,7 @@ export function WindowsStage({ onSwitchToMobile, initialTheme, isMobileDevice }:
                         setNewMixTitle(`Mixtape Vol. ${nextNum}`);
                         setIsModalOpen(true);
                     }}
-                    onCinemaMode={() => setIsCinemaMode(true)}
+                    onCinemaMode={() => setIsPhotoMode(true)}
                     onOpenThemeSelector={() => setIsThemeSelectorOpen(true)}
                     onSnapshotMix={handleLibrarySnapshot}
                     onShowQueue={() => setIsQueueOpen(true)}
@@ -493,13 +493,13 @@ export function WindowsStage({ onSwitchToMobile, initialTheme, isMobileDevice }:
                 }}
             />
 
-            {/* Cinema Mode */}
+            {/* Photo Mode */}
             <AnimatePresence>
-                {isCinemaMode && (
-                    <CinemaModeDesktop
-                        isOpen={isCinemaMode}
+                {isPhotoMode && (
+                    <PhotoModeDesktop
+                        isOpen={isPhotoMode}
                         onClose={() => {
-                            setIsCinemaMode(false);
+                            setIsPhotoMode(false);
                             if (document.fullscreenElement) document.exitFullscreen().catch(err => console.error(err));
                         }}
                         currentSong={currentSong || null}

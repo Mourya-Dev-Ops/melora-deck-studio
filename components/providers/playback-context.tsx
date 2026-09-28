@@ -125,6 +125,7 @@ export interface PlaybackContextType {
     addToQueue: (song: JioSaavnSong | PlayableTrack) => void;
     activeQuality: AudioQuality | null;
     getAnalyser: () => AnalyserNode | null;
+    unlockAudio: () => void;
     downloadSong: (songOrTrack: JioSaavnSong | PlayableTrack) => Promise<boolean>;
     downloadSongs: (songs: (JioSaavnSong | PlayableTrack)[]) => Promise<boolean>;
     downloadQueue: { song: JioSaavnSong | PlayableTrack; quality: AudioQuality; status: 'pending' | 'downloading' | 'error' | 'done', progress?: number, speed?: number }[];
@@ -160,7 +161,7 @@ export function PlaybackProvider({ children }: { children: React.ReactNode }) {
     const [currentSongUrl, setCurrentSongUrl] = useState<string | null>(null);
     const [nextSongDetails, setNextSongDetails] = useState<{ url: string, quality: AudioQuality } | null>(null); // New state for preloaded URL
     const [currentTrackMetadata, setCurrentTrackMetadata] = useState<AudioAnalysisResult | null>(null);
-    const [isLoaded, setIsLoaded] = useState(false);
+    const isLoaded = !!activeMixId;
     const [shuffle, setShuffle] = useState(false);
 
     // F27: Track active blob URLs to prevent memory leaks
@@ -538,6 +539,11 @@ export function PlaybackProvider({ children }: { children: React.ReactNode }) {
             const currentIndex = playingIndexRef.current;
             const songsRemaining = activeMix.songs.length - currentIndex - 1;
 
+            // [DISABLED FOR DECK STUDIO] Continuous Playback / Autoplay is disabled here.
+            // In Deck Studio, tapes are physical. Once the tape ends, it stops.
+            return;
+            
+            /*
             // Simple rule: fetch when ≤ 5 songs remain. No progress gate, no queue size gate.
             if (songsRemaining > 5) return;
 
@@ -622,6 +628,7 @@ export function PlaybackProvider({ children }: { children: React.ReactNode }) {
                     console.error("[Autoplay] Failed:", err);
                     generationLocks.current.delete(activeMixId);
                 });
+            */
         };
 
         // Check every 10 seconds instead of 5 to reduce heavy background CPU load
@@ -698,6 +705,11 @@ export function PlaybackProvider({ children }: { children: React.ReactNode }) {
 
         // Respect the mix's currentSongIndex instead of always starting from 0
         const targetMix = mixesRef.current.find(m => m.id === mixId);
+        if (!targetMix) {
+            console.error("[loadMix] Mix not found:", mixId);
+            return;
+        }
+
         const startIndex = forceIndex !== undefined ? forceIndex : (targetMix?.currentSongIndex ?? 0);
         console.log("[loadMix] Starting from index:", startIndex);
         playingIndexRef.current = startIndex;
@@ -1627,6 +1639,7 @@ export function PlaybackProvider({ children }: { children: React.ReactNode }) {
             nextIndex = nextIndex + 1;
 
             // --- RADIO INFINITE QUEUE CHECK ---
+            /* [DISABLED FOR DECK STUDIO] 
             const isRadio = activeMix.id.startsWith('radio-');
             if (isRadio && nextIndex >= len - 2 && !generationLocks.current.get(activeMix.id)) {
                 console.log(`[Radio] Nearing end of station ${activeMix.id}, appending via DiscoveryEngine...`);
@@ -1676,9 +1689,9 @@ export function PlaybackProvider({ children }: { children: React.ReactNode }) {
                             updateMix(latestMix.id, { songs: trimmedSongs, currentSongIndex: adjustedIndex });
                         }
                     }
-                }).catch(e => console.error("Radio extend failed", e))
                     .finally(() => { generationLocks.current.delete(activeMix.id); });
             }
+            */
 
             // 4. Repeat All / Off Logic
             if (nextIndex >= len) {
@@ -1951,10 +1964,13 @@ export function PlaybackProvider({ children }: { children: React.ReactNode }) {
         };
     }, [play, pause, next, prev, seek]);
 
-    const getAnalyser = useCallback(() => {
-        return audioPlayerRef.current?.getAnalyser() || null;
+    const getAnalyser = useCallback(() => audioPlayerRef.current?.getAnalyser() || null, []);
+
+    const unlockAudio = useCallback(() => {
+        audioPlayerRef.current?.unlock();
     }, []);
 
+    // --- Audio Downloading (Phase 5) ---
     // We also need to ensure currentSong matches what's actually playing if we are in a mix
     // The state `currentSong` is set by effects, but let's trust it.
 
@@ -2229,7 +2245,7 @@ export function PlaybackProvider({ children }: { children: React.ReactNode }) {
         notificationsEnabled, setNotificationsEnabled,
         playbackSpeed, setPlaybackSpeed,
         eq, playInstantMix, addToQueue, startRadio,
-        playbackState, getAnalyser, downloadSong, downloadSongs, downloadQueue, forceCurrentSongQuality
+        playbackState, getAnalyser, unlockAudio, downloadSong, downloadSongs, downloadQueue, forceCurrentSongQuality
     }), [
         activeMixId, isPlaying, currentSong, currentTrack, currentTrackMetadata, volume, duration, shuffle, repeat,
         setQueue, loadMix, play, pause, togglePlay, next, prev, seek,
@@ -2243,7 +2259,7 @@ export function PlaybackProvider({ children }: { children: React.ReactNode }) {
         notificationsEnabled, setNotificationsEnabled,
         playbackSpeed, setPlaybackSpeed,
         eq, playInstantMix, addToQueue, startRadio,
-        playbackState, getAnalyser, downloadSong, downloadSongs, downloadQueue, forceCurrentSongQuality
+        playbackState, getAnalyser, unlockAudio, downloadSong, downloadSongs, downloadQueue, forceCurrentSongQuality
     ]);
     return (
         <PlaybackContext.Provider value={playbackValue}>

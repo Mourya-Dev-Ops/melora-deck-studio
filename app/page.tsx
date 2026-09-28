@@ -9,21 +9,43 @@ const DeckMode = dynamic(() => import("@/components/desktop/deck/scenes/stage").
   loading: () => <SplashScreen text="LOADING DECK STUDIO..." />
 });
 
+import { SetupWizard } from "@/components/shared/SetupWizard";
+
+export type UIMode = 'WELCOME' | 'STUDIO';
+
 export default function Home() {
+  const [mode, setMode] = useState<UIMode | null>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    const isSetupDone = localStorage.getItem('melora-deck-setup-complete') === 'true';
+    if (isSetupDone) {
+      setMode('STUDIO');
+    } else {
+      setMode('WELCOME');
+    }
   }, []);
 
-  if (!mounted) return <SplashScreen text="INITIALIZING..." />;
+  if (!mounted || !mode) return <SplashScreen text="INITIALIZING..." />;
 
-  // Render ONLY Deck Studio
+  // Render ONLY Deck Studio or Welcome
   return (
     <main className="w-full h-full bg-black overflow-hidden relative">
       <ErrorBoundary>
         <Suspense fallback={<SplashScreen text="LOADING..." />}>
-          <DeckMode onSwitchToMobile={() => {}} />
+          {mode === 'WELCOME' && (
+            <SetupWizard
+              onComplete={() => {
+                localStorage.setItem('melora-deck-setup-complete', 'true');
+                setMode('STUDIO');
+              }}
+            />
+          )}
+
+          {mode === 'STUDIO' && (
+            <DeckMode onSwitchToMobile={() => {}} />
+          )}
         </Suspense>
       </ErrorBoundary>
     </main>

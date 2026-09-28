@@ -16,7 +16,8 @@ import { LyricsView } from "@/components/ui/lyrics-view";
 import { EqualizerView } from "@/components/ui/equalizer-view";
 import { Mic2, SlidersHorizontal, ListMusic } from "lucide-react";
 import { TapeRackModal } from "@/components/desktop/deck/modals/TapeRackModal";
-import { QualityBadge } from "@/components/shared/QualityBadge";import { useAudioProgress } from "@/hooks/use-audio-progress";
+import { QualityBadge } from "@/components/shared/QualityBadge";
+import { useAudioProgress } from "@/hooks/use-audio-progress";
 
 
 interface SilverFrostStageProps {
@@ -39,7 +40,7 @@ interface SilverFrostStageProps {
 export function SilverFrostStage({
     currentTheme, onThemeChange, onSelectTheme, onOpenSettings,
     onEditMix, onOpenSearch, onCreateMix, onCinemaMode, onOpenThemeSelector, onSnapshotMix, onShowLyrics, onShowQueue, onShareMix
-}: SilverFrostStageProps) { const { activeMixId, isPlaying, currentSong, volume, duration, loadMix, togglePlay, next, prev, setVolume, isLoaded, seek, shuffle, setShuffle, repeat, setRepeat, eq, activeQuality } = usePlayback();
+}: SilverFrostStageProps) { const { activeMixId, isPlaying, currentSong, volume, duration, loadMix, togglePlay, next, prev, setVolume, isLoaded, seek, shuffle, setShuffle, repeat, setRepeat, eq, activeQuality, play, unlockAudio } = usePlayback();
     const { mixes } = useLibrary();
     const { progress } = useAudioProgress();
 
@@ -88,9 +89,10 @@ export function SilverFrostStage({
                         </div>
                     </div>
                     <nav className="hidden md:flex items-center gap-8 ml-10">
-                        <button onClick={onCinemaMode} className="text-sm font-bold border-b-2 border-[#00aaff] pb-1 text-slate-800"><Tv size={14} className="inline mr-1" />Cinema</button>
+                        <button onClick={onCinemaMode} className="text-sm font-medium text-slate-600 hover:text-[#00aaff] transition-colors"><Camera size={14} className="inline mr-1" />Photo Mode</button>
+                        <button onClick={() => onOpenSearch?.('')} className="text-sm font-medium text-slate-600 hover:text-[#00aaff] transition-colors"><Search size={14} className="inline mr-1" />Search</button>
                         <button onClick={() => setIsRackOpen(true)} className="text-sm font-medium text-slate-600 hover:text-[#00aaff] transition-colors"><ListMusic size={14} className="inline mr-1" />Rack</button>
-                        <button onClick={onCreateMix} className="text-sm font-medium text-slate-600 hover:text-[#00aaff] transition-colors"><Plus size={14} className="inline mr-1" />Create Mix</button>
+                        <button onClick={onCreateMix} className="text-sm font-medium text-slate-600 hover:text-[#00aaff] transition-colors"><Plus size={14} className="inline mr-1" />New Tape</button>
                     </nav>
                 </div>
                 <div className="flex items-center gap-4">
@@ -128,7 +130,7 @@ export function SilverFrostStage({
                                 return (
                                     <div
                                         key={mix.id}
-                                        onClick={() => { playClick(); loadMix(mix.id); }}
+                                        onClick={() => { playClick(); unlockAudio(); loadMix(mix.id); setTimeout(() => play(), 800); }}
                                         onMouseEnter={() => setHoveredMix(mix.id)}
                                         onMouseLeave={() => setHoveredMix(null)}
                                         className={clsx(

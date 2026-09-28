@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { clsx } from "clsx";
 import {
     Play, Pause, SkipBack, SkipForward, LogOut,
-    Palette, Settings, Pencil, Camera, Share2, Plus, Shuffle, Repeat
+    Palette, Settings, Pencil, Camera, Search, Share2, Plus, Shuffle, Repeat
 } from "lucide-react";
 import { ThemeKey } from "@/components/ui/desktop-player";
 import { useAudio } from "@/hooks/use-audio";
@@ -66,7 +66,7 @@ export function OpenDeckStage({
     const [showEq, setShowEq] = useState(false);
     const [isRackOpen, setIsRackOpen] = useState(false);
 
-    const { activeMixId, isPlaying, currentSong, volume, duration, loadMix, togglePlay, next, prev, setVolume, isLoaded, seek, eq, activeQuality, shuffle, setShuffle, repeat, setRepeat } = usePlayback();
+    const { activeMixId, isPlaying, currentSong, volume, duration, loadMix, togglePlay, next, prev, setVolume, isLoaded, seek, eq, activeQuality, shuffle, setShuffle, repeat, setRepeat, play, unlockAudio } = usePlayback();
     const { mixes } = useLibrary();
     const { progress } = useAudioProgress();
 
@@ -131,7 +131,9 @@ export function OpenDeckStage({
 
         if (isOverPlayer) {
             playInsert();
-            loadMix(draggingMix.mix.id);
+            unlockAudio();
+        loadMix(draggingMix.mix.id);
+            setTimeout(() => play(), 800);
         } else {
             setFailedMixId(draggingMix.mix.id);
             setTimeout(() => {
@@ -142,7 +144,7 @@ export function OpenDeckStage({
         setDraggingMix(null);
         setDragPosition(null);
         setIsOverPlayer(false);
-    }, [draggingMix, isOverPlayer, playInsert, loadMix, setFailedMixId]);
+    }, [draggingMix, isOverPlayer, playInsert, loadMix, setFailedMixId, play, unlockAudio]);
 
     return (
         <div
@@ -176,9 +178,10 @@ export function OpenDeckStage({
                 </div>
                 <div className="flex items-center gap-4">
                     <nav className="hidden md:flex items-center gap-5">
-                        <button onClick={onCinemaMode} className="text-[#101814] text-[10px] font-semibold tracking-widest uppercase hover:text-[#2d8652]">Cinema Mode</button>
+                        <button onClick={onCinemaMode} className="text-[#101814] text-[10px] font-semibold tracking-widest uppercase hover:text-[#2d8652] flex items-center gap-1"><Camera size={12} /> Photo Mode</button>
+                        <button onClick={() => onOpenSearch?.('')} className="text-[#101814] text-[10px] font-semibold tracking-widest uppercase hover:text-[#2d8652] flex items-center gap-1"><Search size={12} /> Search</button>
                         <button onClick={() => setIsRackOpen(true)} className="text-[#101814] text-[10px] font-semibold tracking-widest uppercase hover:text-[#2d8652] flex items-center gap-1"><ListMusic size={12} /> Rack</button>
-                        <button onClick={onCreateMix} className="text-[#101814] text-[10px] font-semibold tracking-widest uppercase hover:text-[#2d8652]">+ Create Mix</button>
+                        <button onClick={onCreateMix} className="text-[#101814] text-[10px] font-semibold tracking-widest uppercase hover:text-[#2d8652] flex items-center gap-1"><Plus size={12} /> New Tape</button>
                     </nav>
                     <div className="flex gap-2">
                         <button onClick={onOpenThemeSelector} className="flex size-8 items-center justify-center rounded-full bg-white border border-neutral-200 hover:bg-[#2d8652]/10"><Palette size={14} className="text-neutral-600" /></button>

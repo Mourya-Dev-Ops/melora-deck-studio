@@ -8,9 +8,11 @@ interface LyricsViewProps {
     currentSong: JioSaavnSong | undefined;
     currentTime: number; // Current playback time in seconds
     onClose: () => void;
+    className?: string;
+    transparentBg?: boolean;
 }
 
-export const LyricsView: React.FC<LyricsViewProps> = ({ currentSong, currentTime, onClose }) => {
+export const LyricsView: React.FC<LyricsViewProps> = ({ currentSong, currentTime, onClose, className, transparentBg = false }) => {
     const { lyrics, plainLyrics, isSynced, isLoading, error, offset, setOffset } = useLyrics(currentSong);
     const { seek, duration } = usePlayback();
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -49,7 +51,7 @@ export const LyricsView: React.FC<LyricsViewProps> = ({ currentSong, currentTime
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="absolute inset-0 z-50 flex flex-col items-center justify-center p-8 bg-black/80 backdrop-blur-xl rounded-xl overflow-hidden"
+            className={className || `absolute inset-0 z-50 flex flex-col items-center justify-center p-8 ${transparentBg ? '' : 'bg-black/80 backdrop-blur-xl'} rounded-xl overflow-hidden`}
             onClick={(e) => e.stopPropagation()}
         >
             {/* Header */}

@@ -8,13 +8,13 @@ import { ThemeConfig, ThemeKey, THEMES } from "@/components/ui/desktop-player";
 import { QualityBadge } from "@/components/shared/QualityBadge";
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { decodeHtml } from "@/lib/utils";
-import { Settings, Smartphone, Palette, Maximize2, Plus, Pencil, Camera, Play, Pause, SkipBack, SkipForward, Volume2, Disc, Share2, Sun, Moon, Shuffle, Repeat } from "lucide-react";
+import { Settings, Camera, Share2, Palette, Plus, Pencil, Search, ListMusic, Play, Pause, SkipBack, SkipForward, Volume2, Disc, Sun, Moon, Shuffle, Repeat } from "lucide-react";
 import { Visualizer } from "@/components/ui/visualizer";
 import { Mix } from "@/components/providers/playback-context";
 import { LyricsView } from "@/components/ui/lyrics-view";
 import { EqualizerView } from "@/components/ui/equalizer-view";
 import { TapeRackModal } from "@/components/desktop/deck/modals/TapeRackModal";
-import { Mic2, SlidersHorizontal, ListMusic } from "lucide-react";
+import { Mic2, SlidersHorizontal } from "lucide-react";
 import { useAudioProgress } from "@/hooks/use-audio-progress";
 
 interface DeckStageProps {
@@ -109,7 +109,7 @@ export function DeckStage({ currentTheme, onThemeChange, onSelectTheme, onOpenSe
     const [showEq, setShowEq] = useState(false);
     const playerRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
-    const { currentSong, currentTrack, currentTrackMetadata, isPlaying, togglePlay, next, prev, seek, volume, setVolume, duration, shuffle, setShuffle, repeat, setRepeat, loadMix, activeMixId, play, eq, activeQuality, playbackState } = usePlayback();
+    const { currentSong, currentTrack, currentTrackMetadata, isPlaying, togglePlay, next, prev, seek, volume, setVolume, duration, shuffle, setShuffle, repeat, setRepeat, loadMix, activeMixId, play, eq, activeQuality, playbackState, unlockAudio } = usePlayback();
     const { mixes, addMix, updateMix, deleteMix, likedSongs, toggleLike, isLiked, recentlyPlayed, isDownloaded, removeDownload } = useLibrary();
     const { downloadSong } = usePlayback();
     const { progress } = useAudioProgress();
@@ -212,7 +212,12 @@ export function DeckStage({ currentTheme, onThemeChange, onSelectTheme, onOpenSe
                 // Determine mixId from explicit ID passed
                 if (activeMixId !== id.replace('mix-', '')) {
                     playInsert();
-                    loadMix(id.replace('mix-', ''));
+                    unlockAudio();
+        loadMix(id.replace('mix-', ''));
+                    // Play after a slight delay to let the insert sound play
+                    setTimeout(() => play(), 800);
+                } else {
+                    play();
                 }
             } else {
                 setFailedMixId(id);
@@ -221,7 +226,7 @@ export function DeckStage({ currentTheme, onThemeChange, onSelectTheme, onOpenSe
                 }, 500);
             }
         }
-    }, [activeMixId, playInsert, loadMix, updatePosition, setFailedMixId]);
+    }, [activeMixId, playInsert, loadMix, updatePosition, setFailedMixId, play, unlockAudio]);
 
     const cassetteColors: Record<string, string> = {
         purple: "bg-purple-600",
@@ -355,7 +360,7 @@ export function DeckStage({ currentTheme, onThemeChange, onSelectTheme, onOpenSe
                         </motion.div>
                     )}
 
-                    {/* Cinema Mode */}
+                    {/* Photo Mode */}
                     <motion.div
                         drag
                         dragMomentum={false}
@@ -370,8 +375,28 @@ export function DeckStage({ currentTheme, onThemeChange, onSelectTheme, onOpenSe
                             onClick={() => handleClick(() => { playClick(); onCinemaMode?.(); })}
                             className="hidden md:flex items-center gap-2 bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded shadow-lg active:scale-95 transition-all uppercase text-sm tracking-wider"
                         >
-                            <Maximize2 size={16} />
-                            Cinema Mode
+                            <Camera size={16} />
+                            Photo Mode
+                        </button>
+                    </motion.div>
+
+                    {/* Search */}
+                    <motion.div
+                        drag
+                        dragMomentum={false}
+                        animate={{ x: positions['header-search']?.x || 0, y: positions['header-search']?.y || 0 }}
+                        dragConstraints={containerRef}
+                        dragElastic={0.2}
+                        onDragStart={handleDragStart}
+                        onDragEnd={(e, info) => handleDragEnd(e, info, 'header-search')}
+                        className="transform-gpu cursor-move"
+                    >
+                        <button
+                            onClick={() => handleClick(() => { playClick(); onOpenSearch?.(''); })}
+                            className="hidden md:flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded shadow-lg active:scale-95 transition-all uppercase text-sm tracking-wider"
+                        >
+                            <Search size={16} />
+                            Search
                         </button>
                     </motion.div>
 
@@ -391,7 +416,7 @@ export function DeckStage({ currentTheme, onThemeChange, onSelectTheme, onOpenSe
                             className="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-2 px-4 rounded shadow-lg active:scale-95 transition-all uppercase text-sm tracking-wider border border-zinc-700"
                         >
                             <ListMusic size={16} />
-                            Manage Rack
+                            Rack
                         </button>
                     </motion.div>
 
@@ -411,7 +436,7 @@ export function DeckStage({ currentTheme, onThemeChange, onSelectTheme, onOpenSe
                             className="flex items-center gap-2 bg-gray-200 hover:bg-white text-black font-bold py-2 px-4 rounded shadow-lg active:scale-95 transition-all uppercase text-sm tracking-wider"
                         >
                             <Plus size={16} />
-                            Create Mix
+                            New Tape
                         </button>
                     </motion.div>
                 </div>
@@ -511,7 +536,8 @@ export function DeckStage({ currentTheme, onThemeChange, onSelectTheme, onOpenSe
                                             onClick={() => {
                                                 if (viewMode === 'rack') {
                                                     playClunk();
-                                                    loadMix(mix.id);
+                                                    unlockAudio();
+        loadMix(mix.id);
                                                     setViewMode('player'); // Auto-switch
                                                     setToast(`Loading ${mix.title}...`);
                                                 }

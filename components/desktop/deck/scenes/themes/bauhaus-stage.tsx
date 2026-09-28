@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence, useMotionValue } from "framer-motion";
 import { clsx } from "clsx";
-import { Play, Pause, SkipBack, SkipForward, Volume2, LogOut, Share2, Palette, Settings, Plus, Maximize2, Pencil, Camera, Shuffle, Repeat } from "lucide-react";
+import { Play, Pause, SkipBack, SkipForward, Volume2, LogOut, Share2, Palette, Settings, Plus, Camera, Search, Pencil, Shuffle, Repeat } from "lucide-react";
 import { ThemeKey, THEMES } from "@/components/ui/desktop-player";
 import { useAudio } from "@/hooks/use-audio";
 import { usePlayback, useLibrary, Mix } from "@/components/providers/playback-context";
@@ -47,7 +47,9 @@ function DraggableMixCard({
     onShareMix,
     onOpenSearch,
     loadMix,
-    playClick
+    playClick,
+    unlockAudio,
+    play
 }: {
     mix: Mix;
     position: Position;
@@ -61,6 +63,8 @@ function DraggableMixCard({
     onOpenSearch?: (mixId: string) => void;
     loadMix: (id: string) => void;
     playClick: () => void;
+    unlockAudio: () => void;
+    play: () => void;
 }) {
     const x = useMotionValue(position.x);
     const y = useMotionValue(position.y);
@@ -93,7 +97,9 @@ function DraggableMixCard({
                     const { x: dropX, y: dropY } = info.point;
                     if (dropX >= rect.left && dropX <= rect.right && dropY >= rect.top && dropY <= rect.bottom) {
                         playClick();
+                        unlockAudio();
                         loadMix(mix.id);
+                        setTimeout(() => play(), 800);
                         droppedOnPlayer = true;
                     }
                 }
@@ -171,7 +177,7 @@ export function BauhausStage({ currentTheme, onThemeChange, onSelectTheme, onOpe
     // State Refactor
     const [positions, setPositions] = useState<Record<string, Position>>({});
 
-    const { activeMixId, isPlaying, currentSong, volume, duration, loadMix, togglePlay, next, prev, seek, setVolume, isLoaded, eq, activeQuality, shuffle, setShuffle, repeat, setRepeat } = usePlayback();
+    const { activeMixId, isPlaying, currentSong, volume, duration, loadMix, togglePlay, next, prev, seek, setVolume, isLoaded, eq, activeQuality, shuffle, setShuffle, repeat, setRepeat, play, unlockAudio } = usePlayback();
     const { mixes } = useLibrary();
     const { progress } = useAudioProgress();
 
@@ -249,13 +255,16 @@ export function BauhausStage({ currentTheme, onThemeChange, onSelectTheme, onOpe
                     </div>
                     <div className="flex items-center gap-4 flex-wrap justify-center font-bold">
                         <button onClick={onCinemaMode} className="hidden md:flex items-center gap-2 bg-[#0052cc] text-white px-4 py-2 uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-none transition-all border-2 border-[#1a1a1a] text-sm">
-                            <Maximize2 size={14} /> Cinema Mode
+                            <Camera size={14} /> Photo Mode
                         </button>
-                        <button onClick={onCreateMix} className="flex items-center gap-2 bg-[#ffcc00] text-[#1a1a1a] border-2 border-[#1a1a1a] px-4 py-2 uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-none transition-all text-sm">
-                            <Plus size={14} /> Create Mix
+                        <button onClick={() => onOpenSearch?.('')} className="hidden md:flex items-center gap-2 bg-white text-[#1a1a1a] px-4 py-2 uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-none transition-all border-2 border-[#1a1a1a] text-sm">
+                            <Search size={14} /> Search
                         </button>
                         <button onClick={() => setIsRackOpen(true)} className="flex items-center gap-2 bg-white text-[#1a1a1a] border-2 border-[#1a1a1a] px-4 py-2 uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-none transition-all text-sm">
                             <ListMusic size={14} /> Rack
+                        </button>
+                        <button onClick={onCreateMix} className="flex items-center gap-2 bg-[#ffcc00] text-[#1a1a1a] border-2 border-[#1a1a1a] px-4 py-2 uppercase tracking-wider shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-none transition-all text-sm">
+                            <Plus size={14} /> New Tape
                         </button>
                         <div className="relative">
                             <button onClick={() => onOpenThemeSelector?.()} className="p-3 bg-white border-2 border-[#1a1a1a] hover:bg-gray-100 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all">
@@ -286,6 +295,8 @@ export function BauhausStage({ currentTheme, onThemeChange, onSelectTheme, onOpe
                                     onDragEnd={handlePosChange}
                                     loadMix={loadMix}
                                     playClick={playClick}
+                                    unlockAudio={unlockAudio}
+                                    play={play}
                                     onEditMix={onEditMix}
                                     onSnapshotMix={onSnapshotMix}
                                     onShareMix={onShareMix}

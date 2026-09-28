@@ -34,6 +34,7 @@ export interface AudioPlayerRef {
     prebuffer: (url: string) => void;
     setVolume: (vol: number) => void;
     getAnalyser: () => AnalyserNode | null;
+    unlock: () => void;
 }
 
 export const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(({
@@ -283,6 +284,14 @@ export const AudioPlayer = forwardRef<AudioPlayerRef, AudioPlayerProps>(({
             if (active) active.volume = vol;
         },
         getAnalyser: () => analyserRef.current,
+        unlock: () => {
+            [primaryRef.current, secondaryRef.current].forEach(el => {
+                if (el) {
+                    const p = el.play();
+                    if (p) p.catch(() => {}).finally(() => el.pause());
+                }
+            });
+        },
         prebuffer: (prebufferUrl: string) => {
             const inactive = getInactive();
             if (!inactive || !prebufferUrl) return;

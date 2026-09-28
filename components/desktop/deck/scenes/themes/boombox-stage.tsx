@@ -209,7 +209,7 @@ export function BoomboxStage({
     const [showEq, setShowEq] = useState(false);
     const [isRackOpen, setIsRackOpen] = useState(false);
 
-    const { activeMixId, isPlaying, currentSong, volume, duration, loadMix, togglePlay, next, prev, setVolume, isLoaded, seek, shuffle, setShuffle, repeat, setRepeat, eq, activeQuality } = usePlayback();
+    const { activeMixId, isPlaying, currentSong, volume, duration, loadMix, togglePlay, next, prev, setVolume, isLoaded, seek, shuffle, setShuffle, repeat, setRepeat, eq, activeQuality, play, unlockAudio } = usePlayback();
     const { mixes } = useLibrary();
     const { progress } = useAudioProgress();
 
@@ -260,7 +260,9 @@ export function BoomboxStage({
 
     const handleDropOnPlayer = (mix: Mix) => {
         playInsert();
+        unlockAudio();
         loadMix(mix.id);
+        setTimeout(() => play(), 800);
         setIsOverPlayer(false); // Reset hover
     };
 
@@ -303,12 +305,15 @@ export function BoomboxStage({
                 </div>
                 <nav className="hidden md:flex gap-4 items-center">
                     <button onClick={onCinemaMode} className="bg-white/30 backdrop-blur-sm px-5 py-1 text-white font-bold text-sm transform -rotate-1 shadow hover:-translate-y-1 transition-transform">
-                        <Tv size={14} className="inline mr-1" /> Cinema
+                        <Camera size={14} className="inline mr-1" /> Photo Mode
                     </button>
                     <button onClick={() => setIsRackOpen(true)} className="bg-white/30 backdrop-blur-sm px-5 py-1 text-white font-bold text-sm transform rotate-1 shadow hover:-translate-y-1 transition-transform border border-white/20">
                         <ListMusic size={14} className="inline mr-1" /> Rack
                     </button>
-                    <button onClick={onCreateMix} className="bg-white/30 backdrop-blur-sm px-5 py-1 text-white font-bold text-sm transform -rotate-1 shadow hover:-translate-y-1 transition-transform">
+                    <button onClick={() => onOpenSearch?.('')} className="bg-white/30 backdrop-blur-sm px-5 py-1 text-white font-bold text-sm transform -rotate-1 shadow hover:-translate-y-1 transition-transform">
+                        <Search size={14} className="inline mr-1" /> Search
+                    </button>
+                    <button onClick={onCreateMix} className="bg-white/30 backdrop-blur-sm px-5 py-1 text-white font-bold text-sm transform rotate-1 shadow hover:-translate-y-1 transition-transform">
                         <Plus size={14} className="inline mr-1" /> New Tape
                     </button>
                     {/* Slot Indicator */}

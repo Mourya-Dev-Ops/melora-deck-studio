@@ -452,40 +452,6 @@ export function DesktopSettingsModal({ isOpen, onClose, onSwitchLayout, currentL
                                         <p className="text-zinc-500">Master your sonic output.</p>
                                     </header>
 
-                                    {/* Language Preference */}
-                                    <section>
-                                        <h3 className="text-white font-bold mb-4 flex items-center gap-2">
-                                            <MessageCircle size={18} /> Music Languages
-                                        </h3>
-                                        <div className="flex flex-wrap gap-2">
-                                            {['English', 'Hindi', 'Telugu', 'Tamil', 'Punjabi', 'Marathi', 'Gujarati', 'Bengali', 'Kannada', 'Malayalam', 'Bhojpuri'].map(lang => {
-                                                const isActive = languages.includes(lang.toLowerCase());
-                                                return (
-                                                    <button
-                                                        key={lang}
-                                                        onClick={() => {
-                                                            const lower = lang.toLowerCase();
-                                                            let newLangs;
-                                                            if (isActive) {
-                                                                newLangs = languages.filter(l => l !== lower);
-                                                                if (newLangs.length === 0) newLangs = ['english']; // Prevent empty
-                                                            } else {
-                                                                newLangs = [...languages, lower];
-                                                            }
-                                                            updateLanguages(newLangs);
-                                                        }}
-                                                        className={`px-4 py-2 rounded-full font-bold text-sm border transition-all ${isActive
-                                                            ? 'bg-white text-black border-white'
-                                                            : 'bg-zinc-900 border-zinc-700 text-zinc-400 hover:border-white'}`}
-                                                    >
-                                                        {lang}
-                                                        {isActive && <Check size={14} className="inline-block ml-2 -mt-0.5" />}
-                                                    </button>
-                                                );
-                                            })}
-                                        </div>
-                                    </section>
-
                                     {/* Quality */}
                                     <section>
                                         <h3 className="text-white font-bold mb-4 flex items-center gap-2">

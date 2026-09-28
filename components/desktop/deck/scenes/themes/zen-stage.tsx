@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { clsx } from "clsx";
-import { Play, Pause, SkipBack, SkipForward, Volume2, LogOut, Share2, Palette, Settings, Plus, Camera, Pencil, Mic2, SlidersHorizontal, Sun, Moon, ListMusic, Shuffle, Repeat } from "lucide-react";
+import { Play, Pause, SkipBack, SkipForward, Volume2, LogOut, Share2, Palette, Settings, Plus, Camera, Search, Pencil, Mic2, SlidersHorizontal, Sun, Moon, ListMusic, Shuffle, Repeat } from "lucide-react";
 import { TapeRackModal } from "@/components/desktop/deck/modals/TapeRackModal";
 import { ThemeKey } from "@/components/ui/desktop-player";
 import { useAudio } from "@/hooks/use-audio";
@@ -50,7 +50,7 @@ export function ZenStage({
     // Cache player rect for drag target detection
     const playerRectRef = useRef<DOMRect | null>(null);
 
-    const { activeMixId, isPlaying, currentSong, currentTrack, volume, duration, loadMix, togglePlay, next, prev, seek, setVolume, isLoaded, eq, activeQuality, shuffle, setShuffle, repeat, setRepeat } = usePlayback();
+    const { activeMixId, isPlaying, currentSong, currentTrack, volume, duration, loadMix, togglePlay, next, prev, seek, setVolume, isLoaded, eq, activeQuality, shuffle, setShuffle, repeat, setRepeat, play, unlockAudio } = usePlayback();
     const { mixes, isDownloaded } = useLibrary();
     const { progress } = useAudioProgress();
 
@@ -98,7 +98,9 @@ export function ZenStage({
             const pt = info.point;
             if (pt.x >= rect.left && pt.x <= rect.right && pt.y >= rect.top && pt.y <= rect.bottom) {
                 playClunk();
-                loadMix(mixId);
+                unlockAudio();
+        loadMix(mixId);
+                setTimeout(() => play(), 800);
             } else {
                 setFailedMixId(mixId);
                 setTimeout(() => {
@@ -106,7 +108,7 @@ export function ZenStage({
                 }, 500);
             }
         }
-    }, [playClunk, loadMix, setFailedMixId]);
+    }, [playClunk, loadMix, setFailedMixId, play, unlockAudio]);
 
     const handleClick = useCallback((callback: () => void) => {
         if (!isDraggingRef.current) callback();
@@ -161,20 +163,25 @@ export function ZenStage({
                         className="flex items-center gap-6 pointer-events-auto cursor-grab active:cursor-grabbing"
                         onPointerDown={(e) => e.stopPropagation()}
                     >
-                        <button onPointerDown={(e) => e.stopPropagation()} onClick={onCinemaMode} className={clsx("hidden md:block font-mono text-sm tracking-widest uppercase transition-colors border-b border-transparent pb-1",
+                        <button onPointerDown={(e) => e.stopPropagation()} onClick={onCinemaMode} className={clsx("hidden md:flex items-center gap-2 font-mono text-sm tracking-widest uppercase transition-colors border-b border-transparent pb-1",
                             isDark ? "text-white/50 hover:text-white hover:border-white/30" : "text-black/50 hover:text-black hover:border-black/30"
                         )}>
-                            Cinema Mode
+                            <Camera size={14} /> Photo Mode
                         </button>
-                        <button onPointerDown={(e) => e.stopPropagation()} onClick={() => setIsRackOpen(true)} className={clsx("font-mono text-sm tracking-widest uppercase transition-colors border-b border-transparent pb-1 flex items-center gap-2",
+                        <button onPointerDown={(e) => e.stopPropagation()} onClick={() => onOpenSearch?.('')} className={clsx("hidden md:flex items-center gap-2 font-mono text-sm tracking-widest uppercase transition-colors border-b border-transparent pb-1",
+                            isDark ? "text-white/50 hover:text-white hover:border-white/30" : "text-black/50 hover:text-black hover:border-black/30"
+                        )}>
+                            <Search size={14} /> Search
+                        </button>
+                        <button onPointerDown={(e) => e.stopPropagation()} onClick={() => setIsRackOpen(true)} className={clsx("hidden md:flex items-center gap-2 font-mono text-sm tracking-widest uppercase transition-colors border-b border-transparent pb-1",
                             isDark ? "text-white/50 hover:text-white hover:border-white/30" : "text-black/50 hover:text-black hover:border-black/30"
                         )}>
                             <ListMusic size={14} /> Rack
                         </button>
-                        <button onPointerDown={(e) => e.stopPropagation()} onClick={onCreateMix} className={clsx("font-mono text-sm tracking-widest uppercase transition-colors border-b border-transparent pb-1",
+                        <button onPointerDown={(e) => e.stopPropagation()} onClick={onCreateMix} className={clsx("hidden md:flex items-center gap-2 font-mono text-sm tracking-widest uppercase transition-colors border-b border-transparent pb-1",
                             isDark ? "text-white/50 hover:text-white hover:border-white/30" : "text-black/50 hover:text-black hover:border-black/30"
                         )}>
-                            + Create Mix
+                            <Plus size={14} /> New Tape
                         </button>
 
                         <div className={clsx("flex gap-4 ml-4 border-l pl-6 transition-colors", isDark ? "border-white/10" : "border-black/10")}>
@@ -272,7 +279,8 @@ export function ZenStage({
                                             whileDrag={{ scale: 1.1, zIndex: 100, rotate: 2, cursor: "grabbing" }}
                                             onClick={() => handleClick(() => {
                                                 playClunk();
-                                                loadMix(mix.id);
+                                                unlockAudio();
+        loadMix(mix.id);
                                             })}
                                             className={clsx("group relative w-full aspect-[3/2] rounded-lg shadow-lg border p-2 flex flex-col justify-between cursor-grab active:cursor-grabbing overflow-visible z-0 transition-all",
                                                 colorClass,

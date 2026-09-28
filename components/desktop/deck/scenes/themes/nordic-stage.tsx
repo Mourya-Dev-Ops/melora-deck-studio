@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { clsx } from "clsx";
 import {
     SkipBack, SkipForward, Volume2, LogOut,
-    Palette, Settings, Plus, Camera, Share2, Play, Pause, Shuffle, Repeat
+    Palette, Settings, Plus, Camera, Share2, Play, Pause, Shuffle, Repeat, Search
 } from "lucide-react";
 import { ThemeKey } from "@/components/ui/desktop-player";
 import { useAudio } from "@/hooks/use-audio";
@@ -15,7 +15,8 @@ import { LyricsView } from "@/components/ui/lyrics-view";
 import { EqualizerView } from "@/components/ui/equalizer-view";
 import { Mic2, SlidersHorizontal, ListMusic } from "lucide-react";
 import { TapeRackModal } from "@/components/desktop/deck/modals/TapeRackModal";
-import { QualityBadge } from "@/components/shared/QualityBadge";import { useAudioProgress } from "@/hooks/use-audio-progress";
+import { QualityBadge } from "@/components/shared/QualityBadge";
+import { useAudioProgress } from "@/hooks/use-audio-progress";
 
 
 interface NordicStageProps {
@@ -51,7 +52,7 @@ export function NordicStage({
     onShowQueue,
     onShareMix
 }: NordicStageProps) { const containerRef = useRef<HTMLDivElement>(null);
-    const { activeMixId, isPlaying, currentSong, volume, duration, loadMix, togglePlay, next, prev, seek, setVolume, isLoaded, eq, activeQuality, shuffle, setShuffle, repeat, setRepeat } = usePlayback();
+    const { activeMixId, isPlaying, currentSong, volume, duration, loadMix, togglePlay, next, prev, seek, setVolume, isLoaded, eq, activeQuality, shuffle, setShuffle, repeat, setRepeat, play, unlockAudio } = usePlayback();
     const { mixes } = useLibrary();
     const { progress } = useAudioProgress();
 
@@ -84,14 +85,17 @@ export function NordicStage({
                     </div>
 
                     <nav className="flex items-center gap-6">
-                        <button onClick={onCinemaMode} className="hidden md:block font-mono text-sm tracking-widest uppercase hover:text-blue-400 transition-colors border-b border-transparent hover:border-blue-400 pb-1">
-                            Cinema Mode
+                        <button onClick={onCinemaMode} className="hidden md:flex items-center gap-2 font-mono text-sm tracking-widest uppercase hover:text-blue-400 transition-colors border-b border-transparent hover:border-blue-400 pb-1">
+                            <Camera size={14} /> Photo Mode
                         </button>
-                        <button onClick={() => setIsRackOpen(true)} className="hidden md:block font-mono text-sm tracking-widest uppercase hover:text-blue-400 transition-colors border-b border-transparent hover:border-blue-400 pb-1 flex items-center gap-2">
+                        <button onClick={() => onOpenSearch?.('')} className="hidden md:flex items-center gap-2 font-mono text-sm tracking-widest uppercase hover:text-blue-400 transition-colors border-b border-transparent hover:border-blue-400 pb-1">
+                            <Search size={14} /> Search
+                        </button>
+                        <button onClick={() => setIsRackOpen(true)} className="hidden md:flex items-center gap-2 font-mono text-sm tracking-widest uppercase hover:text-blue-400 transition-colors border-b border-transparent hover:border-blue-400 pb-1">
                             <ListMusic size={14} /> Rack
                         </button>
-                        <button onClick={onCreateMix} className="font-mono text-sm tracking-widest uppercase hover:text-blue-400 transition-colors border-b border-transparent hover:border-blue-400 pb-1">
-                            + Create Mix
+                        <button onClick={onCreateMix} className="hidden md:flex items-center gap-2 font-mono text-sm tracking-widest uppercase hover:text-blue-400 transition-colors border-b border-transparent hover:border-blue-400 pb-1">
+                            <Plus size={14} /> New Tape
                         </button>
 
                         <div className="flex gap-4 ml-4 border-l border-slate-700 pl-6">
@@ -123,6 +127,7 @@ export function NordicStage({
                                             if (activeMixId === mix.id) return; // Prevent reload
                                             playClick();
                                             loadMix(mix.id);
+                                            setTimeout(() => play(), 800);
                                         }}
                                         className={clsx(
                                             "group flex items-center justify-between p-4 rounded-lg cursor-pointer transition-all duration-300 border",
